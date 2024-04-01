@@ -6,7 +6,8 @@ import {
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import ContainerRoutes from "./routes/ContainerRoutes";
-
+import './css/style.css'
+import 'font-awesome/css/font-awesome.min.css';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

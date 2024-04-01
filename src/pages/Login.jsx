@@ -1,11 +1,12 @@
 import React from "react";
 import loginStyles from '../css/login.module.css'
 
-type Props = {};
 
-const Login = (props: Props) => {
+
+const Login = () => {
   return (
-    <>
+    <div className={loginStyles.body}>
+
       <div class={loginStyles.main}>
         <h2 style={{ textAlign: "center" }}>Đăng Nhập</h2>
         <form action="">
@@ -39,7 +40,7 @@ const Login = (props: Props) => {
           </p>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

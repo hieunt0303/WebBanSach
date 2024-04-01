@@ -8,9 +8,9 @@ import Register from "../pages/Register";
 import ForgotPassword from "../pages/ForgotPassword";
 import Home from "../pages/Home";
 
-type Props = {};
 
-const ContainerRoutes = (props: Props) => {
+
+const ContainerRoutes = () => {
   return (
     <Routes>
       <Route path="login" element={<Login />} />
