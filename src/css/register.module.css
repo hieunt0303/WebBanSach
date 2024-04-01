@@ -1,3 +1,4 @@
+
 .body {
   background: url("https://img1.kienthucvui.vn/uploads/2022/01/03/anh-nghe-thuat-ve-cuon-sach_093706002.jpg");
   background-size: cover;
@@ -14,18 +15,19 @@
 .main {
   background-color: #fff;
   border-radius: 15px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 20px
+  rgba(0, 0, 0, 0.2);
   padding: 20px;
   width: 300px;
-  height: 350px;
+  height: 520px;
   margin-top: 23px;
   margin-bottom: 21px;
 }
 
 .main h2 {
   color: #4caf50;
-  margin-bottom: 30px;
-  margin-top: 10px;
+  margin-bottom: 1px;
+  margin-top: 1px;
 }
 
 label {
@@ -36,6 +38,7 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"],
 select {
   width: 100%;
@@ -55,20 +58,13 @@ button[type="submit"] {
   cursor: pointer;
   width: 100%;
   font-size: 20px;
-  margin-top: 25px;
+  margin-top: 6px;
 }
 p {
   margin-top: 3px;
-  font-size: 15px;
+  font-size: 11px;
   text-align: center;
   color: #555;
+
 }
-a.ab {
-  display: contents;
-  font-size: 14px;
-  color: #4caf50;
-}
-a.l {
-  color: #4caf50;
-  font-size: 18px;
-}
+
