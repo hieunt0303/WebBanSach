@@ -34,7 +34,7 @@ const Login = () => {
 
           <p>
             Bạn chưa có tài khoản{" "}
-            <a class="l" href="register.html">
+            <a class="l" href="/register">
               Đăng Ký
             </a>
           </p>
