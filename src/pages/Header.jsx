@@ -49,12 +49,15 @@ const Header = () => {
             <div className="collapse navbar-collapse bg-white" id="navbarCollapse">
               <div className="navbar-nav mx-auto">
                 
-                 <Link to="/home" className="nav-item nav-link active">
+                 <Link to="/" className="nav-item nav-link active">
                  Trang chủ
                 </Link>
                 <span onClick={()=> navigate('/product')} className="nav-item nav-link">
                   Sản phẩm
                 </span>
+                <Link to="/thongTin" className="nav-item nav-link ">
+                 Thông tin
+                </Link>
                 {/* <Link to="/register" className="nav-item nav-link">
                   Thanh toán
                 </Link> */}

@@ -12,6 +12,9 @@ import Home from "../pages/Home";
 import Product from "../pages/Product";
 import Contact from "../pages/Contact";
 import Footer from "../pages/Footer";
+import Detail from "../pages/Detail";
+import Cart from "../pages/Cart";
+import ThongTin from '../pages/ThongTin'
 
 
 
@@ -23,11 +26,14 @@ const ContainerRoutes = () => {
       <Routes>
         
         <Route path="login" element={<Login />} />
-        <Route path="home" element={<Home />} />
+        <Route path="" element={<Home />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="product" element={<Product />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="detail" element={<Detail />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="thongTin" element={<ThongTin />} />
 
 
       </Routes>
