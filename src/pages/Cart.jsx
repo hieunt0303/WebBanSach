@@ -86,7 +86,7 @@ const Cart = () => {
             <h5 className="mb-0 ps-4 me-4">Tổng</h5>
             <p className="mb-0 pe-4">85.000vnđ</p>
           </div>
-          <button className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Thanh toán</button>
+          <button className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button" ><Link to="/checkout" >Thanh Toán</Link></button>
         </div>
       </div>
     </div>

@@ -1505,6 +1505,7 @@ progress {
 .form-control:disabled, .form-control:read-only {
   background-color: #e9ecef;
   opacity: 1;
+  margin-top: 25px;
 }
 .form-control::file-selector-button {
   padding: .375rem .75rem;
@@ -1593,12 +1594,15 @@ progress {
 }
 textarea.form-control {
   min-height: calc(1.5em + 0.75rem + 2px);
+  margin-top: 25px;
 }
 textarea.form-control-sm {
   min-height: calc(1.5em + 0.5rem + 2px);
+  /* margin-top: 25px; */
 }
 textarea.form-control-lg {
   min-height: calc(1.5em + 1rem + 2px);
+  /* margin-top: 25px; */
 }
 .form-control-color {
   max-width: 3rem;
@@ -9217,4 +9221,12 @@ textarea.form-control-lg {
 .d-print-none {
   display: none !important;
 }
+/* .input.w-100.form-control.border-0.py-3.mb-4 {
+  
+  margin-top: 25px;
+} */
+}
+input.w-100.form-control.border-0.py-3.mb-4 {
+  
+  margin-top: 25px;
 }

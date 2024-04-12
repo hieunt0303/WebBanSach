@@ -1,5 +1,6 @@
 import React from "react";
 import registerStyles from '../css/register.module.css'
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -9,7 +10,7 @@ const Register = () => {
       <div class={registerStyles.main}>
         <h2 style={{textAlign: "center"}}>Đăng ký</h2>
         <form action="">
-          <label for="first"
+          {/* <label for="first"
           >Họ và tên:</label
           >
           <input
@@ -17,7 +18,7 @@ const Register = () => {
             id="first"
             name="first"
             required
-          />
+          /> */}
 
           <label for="last"
           >Tên tài khoản:</label
@@ -76,7 +77,7 @@ const Register = () => {
           <button type="submit">
             Đăng Ký
           </button>
-          <p >Bạn đã có tài khoản <a href="">Đăng Nhập</a></p>
+          <p >Bạn đã có tài khoản <Link to="/login" >Đăng Nhập</Link></p>
         </form>
       </div>
     </div>

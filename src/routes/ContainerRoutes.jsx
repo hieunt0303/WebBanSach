@@ -15,6 +15,8 @@ import Footer from "../pages/Footer";
 import Detail from "../pages/Detail";
 import Cart from "../pages/Cart";
 import ThongTin from '../pages/ThongTin'
+import Checkout from "../pages/Checkout";
+
 
 
 
@@ -34,6 +36,7 @@ const ContainerRoutes = () => {
         <Route path="detail" element={<Detail />} />
         <Route path="cart" element={<Cart />} />
         <Route path="thongTin" element={<ThongTin />} />
+        <Route path="checkout" element={<Checkout/>}/>
 
 
       </Routes>
