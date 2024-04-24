@@ -33,7 +33,7 @@ const ContainerRoutes = () => {
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="product" element={<Product />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="detail" element={<Detail />} />
+        <Route path="/detail/:id" element={<Detail />} />
         <Route path="cart" element={<Cart />} />
         <Route path="thongTin" element={<ThongTin />} />
         <Route path="checkout" element={<Checkout/>}/>
