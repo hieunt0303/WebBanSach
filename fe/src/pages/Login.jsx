@@ -10,7 +10,7 @@ const Login = () => {
       <div class={loginStyles.main}>
         <h2 style={{ textAlign: "center" }}>Đăng Nhập</h2>
         <form action="">
-          <label for="last">Tên tài khoản:</label>
+          <label for="last">Email:</label>
           <input type="text" id="last" name="last" required />
 
           <label for="password">Mật khẩu:</label>

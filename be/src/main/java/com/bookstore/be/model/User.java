@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Register {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
@@ -21,7 +21,7 @@ public class Register {
     private int status;
     public static final int DEFAULT_ROLE_STATUS = 1;
 
-    public Register() {
+    public User() {
 
 
     }
