@@ -6,6 +6,8 @@ import com.bookstore.be.repository.RegisterReponsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 
 public class RegisterServiceImpl implements RegisterService{
@@ -22,10 +24,7 @@ public class RegisterServiceImpl implements RegisterService{
             return "Email đã tồn tại!";
         }
 
-//        // Kiểm tra xác thực số điện thoại
-//        if (register.getNumberphone() < 0 && register.getNumberphone() != 0) {
-//            return "Số điện thoại không hợp lệ!";
-//        }
+
         register.setRole(Register.DEFAULT_ROLE_STATUS);
         register.setStatus(Register.DEFAULT_ROLE_STATUS);
 
@@ -34,6 +33,16 @@ public class RegisterServiceImpl implements RegisterService{
         // lưu vao  database
         registerReponsitory.save(register);
         return "User registered successfully!";
+    }
+
+    @Override
+    public Register getUserRegister(int userId) {
+        return registerReponsitory.findById(userId).orElse(null);
+    }
+
+    @Override
+    public List<Register> getAllUserRegisters() {
+        return registerReponsitory.findAll();
     }
 }
 
