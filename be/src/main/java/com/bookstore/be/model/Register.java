@@ -16,7 +16,7 @@ public class Register {
     private String email;
     private String password;
     private String repassword;
-    private int numberphone;
+    private String numberphone;
     private int role;
     private int status;
     public static final int DEFAULT_ROLE_STATUS = 1;
@@ -65,11 +65,11 @@ public class Register {
         this.repassword = repassword;
     }
 
-    public int getNumberphone() {
+    public String getNumberphone() {
         return numberphone;
     }
 
-    public void setNumberphone(int numberphone) {
+    public void setNumberphone(String numberphone) {
         this.numberphone = numberphone;
     }
 
