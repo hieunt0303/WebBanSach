@@ -1,15 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import registerStyles from '../css/register.module.css'
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
 
 const Register = () => {
+  // const [name, setname] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [repassword, rePassword] = useState("");
+  // const [numberphone, setnumberphone ]= useState("");
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    repassword: '',
+    numberphone: '',
+    
+   
+});
+const [error, setError] = useState('');
+
+ 
+  const handleChange = (e) => {
+
+    setFormData({
+
+        ...formData,
+        [e.target.name]: e.target.value
+    });
+};
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (formData.password !== formData.repassword) {
+        setError('Passwords do not match');
+        return;
+    }
+
+    try {
+        const response = await axios.post('http://localhost:8080/register', formData);
+        console.log(response.data);
+        setError('Đăng ký thành công');
+        // Xử lý khi đăng ký thành công
+    } catch (error) {
+        setError('Đăng ký không thành công');
+    }
+};
   return (
     <div className={registerStyles.body}>
       <div class={registerStyles.main}>
         <h2 style={{textAlign: "center"}}>Đăng ký</h2>
-        <form action="">
+        <form onSubmit={handleSubmit}>
           {/* <label for="first"
           >Họ và tên:</label
           >
@@ -26,7 +70,9 @@ const Register = () => {
           <input
             type="text"
             id="last"
-            name="last"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
             required
           />
 
@@ -35,6 +81,8 @@ const Register = () => {
             type="email"
             id="email"
             name="email"
+            value={formData.email}
+            onChange={handleChange}
             required
           />
 
@@ -49,6 +97,8 @@ const Register = () => {
             title="Password must contain at least one number,
 						one alphabet, one symbol, and be at
 						least 8 characters long"
+            value={formData.password}
+            onChange={handleChange}
             required
           />
 
@@ -59,6 +109,8 @@ const Register = () => {
             type="password"
             id="repassword"
             name="repassword"
+            value={formData.repassword}
+            onChange={handleChange}
             required
           />
 
@@ -68,13 +120,17 @@ const Register = () => {
           <input
             type="text"
             id="mobile"
-            name="mobile"
+            name="numberphone"
             maxlength="10"
+            value={formData.numberphone}
+            onChange={handleChange}
+
             required
           />
          
 
-          <button type="submit">
+         {error && <p style={{ color: 'red' }}>{error}</p>}
+         <button type="submit">
             Đăng Ký
           </button>
           <p >Bạn đã có tài khoản <Link to="/login" >Đăng Nhập</Link></p>
@@ -83,6 +139,6 @@ const Register = () => {
     </div>
 
   );
-};
+}
 
 export default Register;
