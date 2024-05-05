@@ -112,4 +112,15 @@ public class BookController {
     public void deleteBook(@PathVariable int id){
         bookService.deleteBookById(id);
     }
+
+    // Endpoint để tìm kiếm sách theo từ khóa
+    @GetMapping("/search")
+    public ResponseEntity<List<Book>> searchBooks(@RequestParam String keyword) {
+        List<Book> foundBooks = bookService.searchBooks(keyword);
+        if (foundBooks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(foundBooks);
+        }
+    }
 }
