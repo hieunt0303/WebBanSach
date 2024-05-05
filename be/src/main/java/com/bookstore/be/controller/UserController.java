@@ -30,7 +30,7 @@ public class UserController {
         return userService.getAllUserRegisters();
     }
     @PostMapping("/login")
-    public String loginUser(@RequestBody User login) {
+    public User loginUser(@RequestBody User login) {
         // Gọi phương thức đăng nhập từ UserService
         return userService.login(login.getEmail(), login.getPassword());
     }

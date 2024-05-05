@@ -4,7 +4,9 @@ import com.bookstore.be.model.User;
 import com.bookstore.be.repository.UserReponsitory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -39,17 +41,34 @@ public class UserServiceImpl implements UserService {
 
 
 
-    public String login(String email, String password) {
-        // Kiểm tra xác thực người dùng
-        User user = userReponsitory.findByEmail(email);
-        if (user == null) {
-            return "Email không tồn tại!";
-        } else if (!user.getPassword().equals(password)) {
-            return "Sai mật khẩu!";
-        } else {
-            return "Đăng nhập thành công!";
-        }
+//    public String login(String email, String password) {
+//        // Kiểm tra xác thực người dùng
+//        User user = userReponsitory.findByEmail(email);
+//        if (user == null) {
+//            return "Email không tồn tại!";
+//        } else if (!user.getPassword().equals(password)) {
+//            return "Sai mật khẩu!";
+//        } else {
+//            return "Đăng nhập thành công!";
+//        }
+//    }
+public User login(String email, String password) {
+    // Kiểm tra xác thực người dùng
+    User user = userReponsitory.findByEmail(email);
+    if (user == null) {
+        // Email không tồn tại, ném ngoại lệ ResponseStatusException với mã trạng thái 403
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email không tồn tại");
+    } else if (!user.getPassword().equals(password)) {
+        // Sai mật khẩu, ném ngoại lệ ResponseStatusException với mã trạng thái 403
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sai mật khẩu");
+    } else {
+        // Đăng nhập thành công, trả về đối tượng User
+        return user;
     }
+
+}
+
+
 
     @Override
     public User getUserRegister(int userId) {

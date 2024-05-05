@@ -20,11 +20,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post('http://localhost:8080/login', formData);
-      console.log(response.data);
-      // Xử lý khi đăng nhập thành công, chuyển hướng đến trang chính sau khi đăng nhập
-      navigate('/');
+      console.log(response.data.id)
+
+      if (response.data.id) {
+
+
+        console.log("Đăng nhập thành công");
+        // Xử lý khi đăng nhập thành công, chuyển hướng đến trang chính sau khi đăng nhập
+        navigate('/');
+      } else {
+        setError('Email hoặc mật khẩu không chính xác');
+      }
     } catch (error) {
       setError('Đăng nhập không thành công');
     }
