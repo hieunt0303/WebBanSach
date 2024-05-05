@@ -20,5 +20,6 @@ public interface BookService{
 
     List<Book> getBooksByCategoryId(int categoryId);
 
+    List<Book> searchBooks(String keyword);
 
 }

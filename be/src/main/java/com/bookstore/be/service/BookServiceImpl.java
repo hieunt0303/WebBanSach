@@ -50,4 +50,17 @@ public class BookServiceImpl implements BookService{
     public List<Book> getBooksByCategoryId(int categoryId) {
         return bookRepository.findByCategoryId(categoryId);
     }
+    @Override
+    public List<Book> searchBooks(String keyword) {
+        // Trả về tất cả sách nếu từ khóa là trống hoặc null
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return bookRepository.findAll();
+        }
+
+        // Chuyển đổi keyword sang chữ thường
+        keyword = keyword.toLowerCase();
+
+        // Sử dụng phương thức tìm kiếm tùy chỉnh trong BookRepository
+        return bookRepository.findByTitleContaining(keyword);
+    }
 }
