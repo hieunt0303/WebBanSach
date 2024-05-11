@@ -15,6 +15,6 @@ public interface UserService {
     User getUserRegister(int id);
 
     List<User> getAllUserRegisters();
-
+    String changePassword(int userId, String password, String repassword);
 
 }

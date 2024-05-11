@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -34,6 +35,18 @@ public class UserController {
         // Gọi phương thức đăng nhập từ UserService
         return userService.login(login.getEmail(), login.getPassword());
     }
+    @PutMapping("/change-password/{userId}")
+    public String changePassword(
+            @PathVariable int userId,
+            @RequestBody Map<String, String> passwords
+    ) {
+        String password = passwords.get("password");
+        String repassword = passwords.get("repassword");
+        // Gọi phương thức changePassword từ UserService
+        return userService.changePassword(userId, password, repassword);
+    }
+
+
 
 
 }
