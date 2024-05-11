@@ -22,6 +22,18 @@ public class UserServiceImpl implements UserService {
         if (!register.getPassword().equals(register.getRepassword())) {
             return "Passwords do not match!";
         }
+        // Kiểm tra độ dài mật khẩu
+        if (register.getPassword().length() < 8) {
+            return "Password must be at least 8 characters long!";
+        }
+        // Kiểm tra xem mật khẩu có ít nhất 1 số, 1 chữ hoa và 1 kí tự đặc biệt
+        if (!register.getPassword().matches("^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$")) {
+            return "Password must contain at least one digit, one uppercase letter, and one special character!";
+        }
+        // Kiểm tra định dạng email
+        if (!register.getEmail().matches("^\\w+@gmail\\.com$")) {
+            return "Email must be in the format example@gmail.com!";
+        }
         // Kiểm tra xem email đã tồn tại chưa
         if (userReponsitory.existsByEmail(register.getEmail())) {
             return "Email đã tồn tại!";
@@ -79,6 +91,39 @@ public User login(String email, String password) {
     public List<User> getAllUserRegisters() {
         return userReponsitory.findAll();
     }
+
+
+    @Override
+    public String changePassword(int userId, String password, String repassword) {
+        // Kiểm tra xem userId có tồn tại trong hệ thống không
+        User user = userReponsitory.findById(userId).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
+        }
+
+        // Kiểm tra độ dài mật khẩu mới
+        if (password.length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 8 characters long!");
+        }
+
+        // Kiểm tra xem mật khẩu mới và nhập lại mật khẩu khớp nhau không
+        if (!password.equals(repassword)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match!");
+        }
+
+        // Cập nhật mật khẩu mới
+        user.setPassword(password);
+        user.setRepassword(repassword);
+        userReponsitory.save(user);
+
+        return "Password updated successfully!";
+    }
+
+
+
+
+
+
 
 
 
