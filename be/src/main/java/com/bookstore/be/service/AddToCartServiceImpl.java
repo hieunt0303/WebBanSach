@@ -15,84 +15,33 @@ public class AddToCartServiceImpl implements AddToCartService{
     private AddToCartRepository addToCartRepository;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private UserService userService;
 
-//    @Override
-//    public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty, double price) throws Exception{
-//        try {
-//            if(addToCartRepository.getCartByBookIdAndUserId(userId, bookId).isPresent()){
-//                throw new Exception("Product is already exist.");
-//            }
-//            AddToCart obj = new AddToCart();
-//            obj.setQty(qty);
-//            obj.setUser_id(userId);
-//            Book pro = bookService.getBookById(bookId);
-//            obj.setBook(pro);
-//            //TODO price has to check with qty
-//            obj.setPrice(price);
-//            addToCartRepository.save(obj);
-//            return this.getCartByUserId(userId);
-//        }catch(Exception e) {
-//            e.printStackTrace();
-//            throw new Exception(e.getMessage());
-//        }
-//
-//
-//
-//    }
-    //Chat
-//@Override
-//public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty, double price) throws Exception {
-//    try {
-//        Optional<AddToCart> existingCartOptional = addToCartRepository.getCartByBookIdAndUserId(userId, bookId);
-//        if (existingCartOptional.isPresent()) {
-//            // Nếu sản phẩm đã tồn tại, thực hiện cập nhật số lượng và giá
-//            AddToCart existingCart = existingCartOptional.get();
-//            int newQty = existingCart.getQty() + qty; // Tăng số lượng
-//            double newPrice = price; // Giá mới (có thể tính lại theo logic của bạn)
-//
-//            // Cập nhật số lượng và giá mới cho sản phẩm trong giỏ hàng
-//            existingCart.setQty(newQty);
-//            existingCart.setPrice(newPrice);
-//            addToCartRepository.save(existingCart);
-//        } else {
-//            // Nếu sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
-//            AddToCart obj = new AddToCart();
-//            obj.setQty(qty);
-//            obj.setUser_id(userId);
-//            Book pro = bookService.getBookById(bookId);
-//            obj.setBook(pro);
-//            obj.setPrice(price);
-//            addToCartRepository.save(obj);
-//        }
-//
-//        return this.getCartByUserId(userId);
-//    } catch (Exception e) {
-//        e.printStackTrace();
-//        throw new Exception(e.getMessage());
-//    }
-//}
+
 @Override
-//public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty, double price) throws Exception {
+//public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty, double price, float total) throws Exception {
 //    try {
 //        Optional<AddToCart> existingCartOptional = addToCartRepository.getCartByBookIdAndUserId(userId, bookId);
 //        if (existingCartOptional.isPresent()) {
-//            // Nếu sản phẩm đã tồn tại, thực hiện cập nhật số lượng và giá
+//            // If the product already exists, update the quantity and price
 //            AddToCart existingCart = existingCartOptional.get();
-//            int newQty = existingCart.getQty() + qty; // Tăng số lượng
-//            double newPrice = existingCart.getPrice() + (qty * price); // Tính lại giá mới
+//            int newQty = existingCart.getQty() + qty; // Increase quantity
+//            float newTotal = (float)(existingCart.getTotal() + (qty * price)); // Recalculate new total price and convert to float
 //
-//            // Cập nhật số lượng và giá mới cho sản phẩm trong giỏ hàng
+//            // Update the quantity, price, and total price for the product in the cart
 //            existingCart.setQty(newQty);
-//            existingCart.setPrice(newPrice);
-//            addToCartRepository.save(existingCart);
+//            existingCart.setTotal(newTotal);
+//            addToCartRepository.updateQtyAndTotalByCartId(existingCart.getId(), newQty, newTotal);
 //        } else {
-//            // Nếu sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
+//            // If the product does not exist, add it to the cart
 //            AddToCart obj = new AddToCart();
 //            obj.setQty(qty);
 //            obj.setUser_id(userId);
 //            Book pro = bookService.getBookById(bookId);
 //            obj.setBook_id(bookId);
 //            obj.setPrice(price);
+//            obj.setTotal((float)(qty * price)); // Calculate the new total price when adding a new product to the cart and convert to float
 //            addToCartRepository.save(obj);
 //        }
 //
@@ -101,29 +50,33 @@ public class AddToCartServiceImpl implements AddToCartService{
 //        e.printStackTrace();
 //        throw new Exception(e.getMessage());
 //    }
-//}
+
 public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty, double price, float total) throws Exception {
     try {
+        // Kiểm tra sự tồn tại của userId trong bảng user trước khi thêm vào giỏ hàng
+        if (!userService.isUserExists(userId)) {
+            throw new IllegalArgumentException("User does not exist.");
+        }
+
         Optional<AddToCart> existingCartOptional = addToCartRepository.getCartByBookIdAndUserId(userId, bookId);
         if (existingCartOptional.isPresent()) {
-            // If the product already exists, update the quantity and price
+            // Nếu sản phẩm đã tồn tại, cập nhật số lượng và giá
             AddToCart existingCart = existingCartOptional.get();
-            int newQty = existingCart.getQty() + qty; // Increase quantity
-            float newTotal = (float)(existingCart.getTotal() + (qty * price)); // Recalculate new total price and convert to float
+            int newQty = existingCart.getQty() + qty;
+            float newTotal = (float)(existingCart.getTotal() + (qty * price));
 
-            // Update the quantity, price, and total price for the product in the cart
             existingCart.setQty(newQty);
             existingCart.setTotal(newTotal);
             addToCartRepository.updateQtyAndTotalByCartId(existingCart.getId(), newQty, newTotal);
         } else {
-            // If the product does not exist, add it to the cart
+            // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
             AddToCart obj = new AddToCart();
             obj.setQty(qty);
             obj.setUser_id(userId);
             Book pro = bookService.getBookById(bookId);
             obj.setBook_id(bookId);
             obj.setPrice(price);
-            obj.setTotal((float)(qty * price)); // Calculate the new total price when adding a new product to the cart and convert to float
+            obj.setTotal((float)(qty * price));
             addToCartRepository.save(obj);
         }
 
@@ -133,6 +86,7 @@ public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty,
         throw new Exception(e.getMessage());
     }
 }
+
 
 
 

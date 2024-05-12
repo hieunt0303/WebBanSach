@@ -63,4 +63,8 @@ public class BookServiceImpl implements BookService{
         // Sử dụng phương thức tìm kiếm tùy chỉnh trong BookRepository
         return bookRepository.findByTitleContaining(keyword);
     }
+    @Override
+    public boolean isBookExists(int bookId) {
+        return  bookRepository.existsById(bookId);
+    }
 }
