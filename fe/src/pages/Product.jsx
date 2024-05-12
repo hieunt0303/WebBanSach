@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { Nav, Tab, Container } from 'react-bootstrap';
+import { Nav, Tab, Container, Button } from 'react-bootstrap';
 import axios from 'axios';
 
 
@@ -99,7 +99,36 @@ const Product = () => {
         return keyword.replace(regex, match => `<strong>${match}</strong>`);
     };
 
+////CART
+const handleAddToCart = async (bookId) => {
+    try {
+        const authData = JSON.parse(localStorage.getItem('auth-data'));
+        const userId = authData?.id;
 
+        if (!userId) {
+            // Nếu không có userId (người dùng chưa đăng nhập), điều hướng đến trang đăng nhập
+            navigate('/login');
+            return;
+        }
+        // Khai báo và gán giá trị cho price và qty
+        const price = books.find(book => book.id === bookId)?.price;
+        const qty = 1; // Số lượng mặc định
+
+        const response = await axios.post('http://localhost:8080/cart/addBookToCart', {
+            bookId: bookId,
+            userId: userId,
+            price: price, // Giá sản phẩm (thay đổi theo sản phẩm)
+            total: price * qty, // Tổng giá (thay đổi theo sản phẩm và số lượng)
+            qty: qty
+        });
+
+        console.log('Sản phẩm đã được thêm vào giỏ hàng:', response.data);
+        // Điều hướng đến trang giỏ hàng sau khi thêm sản phẩm thành công
+        navigate('/cart');
+    } catch (error) {
+        console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+    }
+};
 
 
 
@@ -168,7 +197,7 @@ const Product = () => {
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <div className="col-lg-12">
+                                            {/* <div className="col-lg-12">
                                                 <div className="mb-3">
                                                     <h4 className="mb-2">Price</h4>
                                                     <input
@@ -185,7 +214,7 @@ const Product = () => {
                                                         0
                                                     </output>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                     <div className="col-lg-9">
@@ -198,10 +227,8 @@ const Product = () => {
                                                         </div>
                                                         <div className="p-4 border border-secondary border-top-0 rounded-bottom">
                                                             <Link to={`/detail/${book.id}`}><h4>{book.title}<br></br></h4></Link><br></br><br></br>
-                                                            <p className="text-dark fs-5 fw-bold mb-0" style={{ textAlign: "left" }}>{book.price}.000đ  </p><br></br>
-                                                            <Link to="/cart" className="btn border border-secondary rounded-pill px-3 text-primary d-flex justify-content-center align-items-center">
-                                                                <i className="fa fa-shopping-bag me-2 text-primary"></i> Thêm giỏ hàng
-                                                            </Link>
+                                                            <p className="text-dark fs-5 fw-bold mb-0" style={{ textAlign: "left" }}>{book.price}vnđ  </p><br></br>
+                                                            <button className="btn btn-primary"  onClick={() => handleAddToCart(book.id)}> Thêm giỏ hàng</button>
                                                         </div>
                                                     </div>
                                                 </div>

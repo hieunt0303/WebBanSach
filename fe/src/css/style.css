@@ -1904,7 +1904,8 @@ textarea.form-control-lg {
 .input-group {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
+  flex-wrap: inherit;
   align-items: stretch;
   width: 100%}
 .input-group>.form-control, .input-group>.form-select {
@@ -1912,9 +1913,11 @@ textarea.form-control-lg {
   flex: 1 1 auto;
   width: 93%;
   min-width: 0;
+  
 }
 .input-group>.form-control:focus, .input-group>.form-select:focus {
   z-index: 3;
+  
 }
 .input-group .btn {
   position: relative;
@@ -1936,6 +1939,7 @@ textarea.form-control-lg {
   background-color: #e9ecef;
   border: 1px solid #ced4da;
   border-radius: 10px;
+  
 }
 .input-group-lg>.form-control, .input-group-lg>.form-select, .input-group-lg>.input-group-text, .input-group-lg>.btn {
   padding: .5rem 1rem;
@@ -1946,6 +1950,7 @@ textarea.form-control-lg {
   padding: .25rem .5rem;
   font-size: 0.875rem;
   border-radius: 10px;
+  
 }
 .input-group-lg>.form-select, .input-group-sm>.form-select {
   padding-right: 3rem;
@@ -1953,15 +1958,20 @@ textarea.form-control-lg {
 .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu), .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  
 }
 .input-group.has-validation>:nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu), .input-group.has-validation>.dropdown-toggle:nth-last-child(n+4) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  
 }
 .input-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  margin: auto;
+  background-color: white;
   margin-left: -1px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  
 }
 .valid-feedback {
   display: none;
