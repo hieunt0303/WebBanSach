@@ -1,9 +1,52 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
 const Cart = () => {
   const navigate = useNavigate();
+
+  const [cartItems, setCartItems] = useState([]);
+  
+
+useEffect(() => {
+  const fetchCartItems = async () => {
+      try {
+          const authData = JSON.parse(localStorage.getItem('auth-data'));
+          const userId = authData?.id;
+
+          if (!userId) {
+              console.log('Người dùng chưa đăng nhập.');
+              return;
+          }
+
+          const response = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
+              params: { userId: userId }
+          });
+
+          setCartItems(response.data);
+      } catch (error) {
+          console.error('Lỗi khi lấy danh sách sản phẩm từ giỏ hàng:', error);
+      }
+  };
+
+  fetchCartItems();
+}, []);
+
+const handleQuantityChange = async (cartItemId, newQuantity) => {
+  try {
+      // Gửi yêu cầu cập nhật số lượng sản phẩm
+      const response = await axios.put(`http://localhost:8080/cart/updateQtyForCart`, {
+          cartId: cartItemId,
+          qty: newQuantity
+      });
+
+      // Cập nhật số lượng sản phẩm trong giỏ hàng và tổng tiền
+      setCartItems(response.data);
+  } catch (error) {
+      console.error('Lỗi khi cập nhật số lượng sản phẩm:', error);
+  }
+};
 
   return (
     <>  
@@ -21,46 +64,62 @@ const Cart = () => {
             <th scope="col">Xóa</th>
           </tr>
         </thead>
+       
         <tbody>
-          <tr>
-            <th scope="row">
-              <div className="d-flex align-items-center">
-                <img src="img/vegetable-item-3.png" className="img-fluid me-5 rounded-circle" style={{width: 80, height: 80}} alt />
-              </div>
-            </th>
-            <td>
-              <p className="mb-0 mt-4">Tủ Sách Văn Học Cổ Điển Rút Gọn - Người Cá</p>
-            </td>
-            <td>
-              <p className="mb-0 mt-4">85.000</p>
-            </td>
-            <td>
-              <div className="input-group quantity mt-4" style={{width: 100}}>
-                <div className="input-group-btn">
-                  <button className="btn btn-sm btn-minus rounded-circle bg-light border">
-                    <i className="fa fa-minus" />
-                  </button>
-                </div>
-                <input type="text" className="form-control form-control-sm text-center border-0" defaultValue={1} />
-                <div className="input-group-btn">
-                  <button className="btn btn-sm btn-plus rounded-circle bg-light border">
-                    <i className="fa fa-plus" />
-                  </button>
-                </div>
-              </div>
-            </td>
-            <td>
-              <p className="mb-0 mt-4">85.000vnđ</p>
-            </td>
-            <td>
-              <button className="btn btn-md rounded-circle bg-light border mt-4">
-                <i className="fa fa-times text-danger" />
-              </button>
-            </td>
-          </tr>
-         
-         
-        </tbody>
+        {cartItems.map(item => (
+                  <tr key={item.id}>
+                    <th scope="row">
+                      <div className="d-flex align-items-center">
+                        <img src={item.img} className="img-fluid me-5 rounded-circle" style={{ width: 80, height: 80 }} alt={item.title} />
+                      </div>
+                    </th>
+                    <td>
+                      <p className="mb-0 mt-4">{item.title}</p>
+                    </td>
+                    <td>
+                      <p className="mb-0 mt-4">{item.price}vnđ</p>
+                    </td>
+                    {/* <td>
+                      <div className="input-group quantity mt-4" style={{ width: 100 }}>
+                        <div className="input-group-btn">
+                          <button className="btn btn-sm btn-minus rounded-circle bg-light border">
+                            <i className="fa fa-minus" />
+                          </button>
+                        </div>
+                        <input type="text" className="form-control form-control-sm text-center border-0" defaultValue={item.qty} />
+                        <div className="input-group-btn">
+                          <button className="btn btn-sm btn-plus rounded-circle bg-light border">
+                            <i className="fa fa-plus" />
+                          </button>
+                        </div>
+                      </div>
+                    </td> */}
+                     <td>
+                            <div className="input-group quantity mt-4" style={{ width: 100 }}>
+                                <div className="input-group-btn">
+                                    <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => handleQuantityChange(item.id, item.qty - 1)}>
+                                        <i className="fa fa-minus" />
+                                    </button>
+                                </div>
+                                <input type="text" className="form-control form-control-sm text-center border-0" value={item.qty} readOnly />
+                                <div className="input-group-btn">
+                                    <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={() => handleQuantityChange(item.id, item.qty + 1)}>
+                                        <i className="fa fa-plus" />
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    <td>
+                      <p className="mb-0 mt-4">{item.total}vnđ</p>
+                    </td>
+                    <td>
+                      <button className="btn btn-md rounded-circle bg-light border mt-4">
+                        <i className="fa fa-times text-danger" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                            </tbody>
       </table>
     </div>
    

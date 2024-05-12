@@ -10,4 +10,8 @@ public interface AddToCartService {
     List<AddToCart> getCartByUserId(int userId);
     public void updateQtyByCartId(int cartId, int qty,double price ) throws Exception;
 
+    boolean isCartItemExists(int cartId);
+    public AddToCart getCartItemById(int cartId);
+    public void updateQtyAndTotalByCartId(int cartId, int qty, float total);
+
 }

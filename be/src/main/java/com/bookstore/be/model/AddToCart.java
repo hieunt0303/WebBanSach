@@ -25,6 +25,8 @@ public class AddToCart {
     private double price;
     private int user_id;
     private float total;
+    private String title;
+    private String img;
 //    @Column(updatable=false, insertable=false)
 //    String added_date;
 
