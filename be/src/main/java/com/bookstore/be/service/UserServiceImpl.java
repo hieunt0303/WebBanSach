@@ -121,7 +121,10 @@ public User login(String email, String password) {
 
 
 
-
+    @Override
+    public boolean isUserExists(int userId) {
+        return userReponsitory.existsById(userId);
+    }
 
 
 
