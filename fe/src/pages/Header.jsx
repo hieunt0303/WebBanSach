@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // type Props = {};
 
 
@@ -6,10 +6,20 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [infoUser, setInfoUser] = useState(null)
+
+  useEffect(() => {
+    //check xem trong localStorage có biến auth-data hay chưa
+    const authData = localStorage.getItem('auth-data')
+    if (authData) {
+      setInfoUser(JSON.parse(authData));
+    }
+
+  }, [])
 
   return (
     <>
-    
+
 
       <div className="container-fluid fixed-top">
         <div className="container topbar bg-primary d-none d-lg-block">
@@ -21,13 +31,13 @@ const Header = () => {
                   Linh Trung, Thủ Đức
                 </a>
               </small>
-              
+
             </div>
             <div className="top-link pe-2">
-            <small className="me-3">
+              <small className="me-3">
                 <i className="fas fa-envelope me-2 text-secondary"></i>
                 <a href="#" className="text-white">
-                Bookstore@gmail.com
+                  Bookstore@gmail.com
                 </a>
               </small>
             </div>
@@ -48,15 +58,15 @@ const Header = () => {
             </button>
             <div className="collapse navbar-collapse bg-white" id="navbarCollapse">
               <div className="navbar-nav mx-auto">
-                
-                 <Link to="/" className="nav-item nav-link active">
-                 Trang chủ
+
+                <Link to="/" className="nav-item nav-link active">
+                  Trang chủ
                 </Link>
-                <span onClick={()=> navigate('/product')} className="nav-item nav-link">
+                <span onClick={() => navigate('/product')} className="nav-item nav-link">
                   Sản phẩm
                 </span>
                 <Link to="/thongTin" className="nav-item nav-link ">
-                 Thông tin
+                  Thông tin
                 </Link>
                 {/* <Link to="/register" className="nav-item nav-link">
                   Thanh toán
@@ -80,8 +90,8 @@ const Header = () => {
                     </a>
                   </div>
                 </div> */}
-                 <Link to="/contact" className="nav-item nav-link">
-                  Liên hệ 
+                <Link to="/contact" className="nav-item nav-link">
+                  Liên hệ
                 </Link>
               </div>
               <div className="d-flex m-3 me-0">
@@ -94,8 +104,8 @@ const Header = () => {
                 </button> */}
                 <a href="#" className="position-relative me-4 my-auto">
                   {/* <i className="fa fa-shopping-bag fa-2x"></i> */}
-                   <Link to="/cart" className="fa fa-shopping-bag fa-2x">
-                </Link>
+                  <Link to="/cart" className="fa fa-shopping-bag fa-2x">
+                  </Link>
                   <span
                     className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                     style={{ top: "-5px", left: "15px", height: "20px", minWidth: "20px" }}
@@ -105,9 +115,25 @@ const Header = () => {
 
                   {/* <span className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style={{top: -5px; left: 15px; height: 20px; min-width: 20px;}}>3</span> */}
                 </a>
-                <a href="#" className="my-auto">
-                  <a className="fas fa-user fa-2x" href="/login"></a>
-                </a>
+                {/* Hiển thị biểu tượng mail dựa trên việc infoUser có tồn tại hay không */}
+                {infoUser ? (
+                  <a href="#" className="my-auto">
+                   <div style={{backgroundColor:'#81c408', padding:'10px', display:'flex', borderRadius:'100%', height:'40px', width:'40px', alignItems:'center',justifyContent:'center', fontWeight:600, color:'white'}}>{infoUser.email.charAt(0)}</div>
+                  </a>
+                ) : (
+                  <div  className="my-auto" onClick={()=>{
+                    localStorage.removeItem('auth-data');
+                    navigate('/login')
+                  }}>
+                    <i className="fas fa-user fa-2x"></i>
+                  </div>
+                )}
+                {
+                  infoUser && <div onClick={()=>{
+                    localStorage.removeItem('auth-data');
+                    window.location.reload('/login')
+                  }} > dang xuat</div>
+                }
               </div>
             </div>
           </nav>
@@ -149,9 +175,9 @@ const Header = () => {
           </div>
         </div>
       </div>
-      
-      </>
-      );
+
+    </>
+  );
 };
 
 export default Header;

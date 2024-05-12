@@ -44,6 +44,8 @@ const handleSubmit = async (e) => {
         const response = await axios.post('http://localhost:8080/register', formData);
         console.log(response.data);
         setError('Đăng ký thành công');
+        //luu tt user
+        localStorage.setItem('auth-data',JSON.stringify(response.data));
         // Xử lý khi đăng ký thành công
     } catch (error) {
         setError('Đăng ký không thành công');

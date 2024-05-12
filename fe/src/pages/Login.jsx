@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import loginStyles from '../css/login.module.css';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -26,11 +26,12 @@ const Login = () => {
       console.log(response.data.id)
 
       if (response.data.id) {
-
+        //lưu tt user  vào biến localStorage
+        localStorage.setItem('auth-data',JSON.stringify(response.data));
 
         console.log("Đăng nhập thành công");
         // Xử lý khi đăng nhập thành công, chuyển hướng đến trang chính sau khi đăng nhập
-        navigate('/');
+      window.location.reload('/');
       } else {
         setError('Email hoặc mật khẩu không chính xác');
       }
@@ -38,6 +39,13 @@ const Login = () => {
       setError('Đăng nhập không thành công');
     }
   };
+  useEffect(() => {
+    //biến để lưu trong localStorage là "auth-data"
+    //check xem đã tồn tại chưa, rùi thì đã đăng nhập tự động chuyển qua home
+    if(localStorage.getItem('auth-data')) {
+      navigate('/')
+    }
+  },[])
 
   return (
       <div className={loginStyles.body}>
