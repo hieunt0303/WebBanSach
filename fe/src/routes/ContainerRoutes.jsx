@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Route,
   Routes,
@@ -22,9 +22,17 @@ import Checkout from "../pages/Checkout";
 
 
 const ContainerRoutes = () => {
+  const [cartItems, setCartItems] = useState([]); 
+  const [authData, setAuthData] = useState(null); 
+
+
+  // Function to update cartItems state
+  const updateCartItems = (items) => {
+    setCartItems(items);
+  };
   return (
     <>
-    <Header/>
+      <Header cartItems={cartItems} /> {/* truyền cartItems làm prop cho Header */}
       <Routes>
         
         <Route path="login" element={<Login />} />
@@ -33,9 +41,11 @@ const ContainerRoutes = () => {
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="product" element={<Product />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="/detail/:id" element={<Detail />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="thongTin" element={<ThongTin />} />
+        <Route path="/detail/:id" element={<Detail authData={authData} updateCartItems={updateCartItems} />} />
+        <Route
+          path="cart"
+          element={<Cart cartItems={cartItems} updateCartItems={updateCartItems} authData={authData} />} // Pass cartItems and updateCartItems as props to Cart
+        />        <Route path="thongTin" element={<ThongTin />} />
         <Route path="checkout" element={<Checkout/>}/>
 
 

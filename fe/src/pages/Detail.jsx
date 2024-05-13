@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate,useParams  } from "react-router-dom";
 import axios from 'axios';
-const Detail = ({ match }) => {
+const Detail = ({ match,authData, updateCartItems }) => {
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
     const { id } = useParams();
+    const [quantity, setQuantity] = useState(1);
+    const navigate = useNavigate();
+
     useEffect(() => {
       const fetchBookDetail = async () => {
         try {
@@ -19,6 +22,49 @@ const Detail = ({ match }) => {
   
       fetchBookDetail();
     }, [id]);
+    
+    ////CART
+    const handleAddToCart = async (bookId) => {
+      try {
+        const authData = JSON.parse(localStorage.getItem('auth-data'));
+        const userId = authData?.id;
+    
+        if (!userId) {
+          // Nếu không có userId (người dùng chưa đăng nhập), điều hướng đến trang đăng nhập
+          navigate('/login');
+          return;
+        }
+    
+        const price = book.price;
+    
+        const response = await axios.post('http://localhost:8080/cart/addBookToCart', {
+          bookId: bookId,
+          userId: userId,
+          price: price, // Giá sản phẩm (thay đổi theo sản phẩm)
+          total: price * quantity, // Tổng giá (thay đổi theo sản phẩm và số lượng)
+          qty: quantity // Sử dụng quantity từ state
+        });
+    
+        console.log('Sản phẩm đã được thêm vào giỏ hàng:', response.data);
+        // Điều hướng đến trang giỏ hàng sau khi thêm sản phẩm thành công
+        navigate('/cart');
+      } catch (error) {
+        console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+      }
+    };
+    
+    //tang gaim sl 
+    const handleIncreaseQuantity = () => {
+      setQuantity(quantity + 1);
+    };
+  
+    const handleDecreaseQuantity = () => {
+      if (quantity > 1) {
+        setQuantity(quantity - 1);
+      } else {
+        alert("Số lượng phải lớn hơn hoặc bằng 1.");
+      }
+    };
   
     return (
     <>  
@@ -36,25 +82,26 @@ const Detail = ({ match }) => {
                 </div>
                 <div className="col-lg-6">
                   <h4 className="fw-bold mb-3">{book.title}</h4>
-                  <p className="mb-3">Category: {book.category.nameC}</p>
-                  <p className="mb-3">Author: {book.author}</p>
-                  <h5 className="fw-bold mb-3">{book.price}.000đ</h5>
+                  <p className="mb-3">Thể loại: {book.category.nameC}</p>
+                  <p className="mb-3">Tác giả: {book.author}</p>
+                  <h5 className="fw-bold mb-3">{book.price}vnđ</h5>
                   <div className="input-group quantity mb-5" style={{ width: 100 }}>
                     <div className="input-group-btn">
-                      <button className="btn btn-sm btn-minus rounded-circle bg-light border">
+                    <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={handleDecreaseQuantity} >
+
                         <i className="fa fa-minus" />
                       </button>
                     </div>
-                    <input type="text" className="form-control form-control-sm text-center border-0" defaultValue={1} />
+                    <input type="text" className="form-control form-control-sm text-center border-0" value={quantity} readOnly />
                     <div className="input-group-btn">
-                      <button className="btn btn-sm btn-plus rounded-circle bg-light border">
+                    <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={handleIncreaseQuantity}>
                         <i className="fa fa-plus" />
                       </button>
                     </div>
                   </div>
-                  <Link to="/cart" className="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
-                    <i className="fa fa-shopping-bag me-2 text-primary"></i> Add to Cart
-                  </Link>
+                  <button className="btn btn-primary"  onClick={() => handleAddToCart(book.id)}> Thêm giỏ hàng</button>
+
+              
                 </div>
                 <div className="col-lg-12">
                   <nav>

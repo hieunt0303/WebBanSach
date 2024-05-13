@@ -22,42 +22,51 @@ public class AddToCartServiceImpl implements AddToCartService{
     private UserReponsitory userReponsitory;
 
 
-@Override
-public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty, double price, float total) throws Exception {
-    try {
-        // Kiểm tra sự tồn tại của userId trong bảng user trước khi thêm vào giỏ hàng
-        if (!userService.isUserExists(userId)) {
-            throw new IllegalArgumentException("User does not exist.");
+    @Override
+    public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty, double price, float total) throws Exception {
+        try {
+            // Kiểm tra sự tồn tại của userId trong bảng user trước khi thêm vào giỏ hàng
+            if (!userService.isUserExists(userId)) {
+                throw new IllegalArgumentException("User does not exist.");
+            }
+
+            // Lấy thông tin chi tiết của sách từ bảng Book
+            Book book = bookService.getBookById(bookId);
+            if (book == null) {
+                throw new IllegalArgumentException("Book does not exist.");
+            }
+
+            Optional<AddToCart> existingCartOptional = addToCartRepository.getCartByBookIdAndUserId(userId, bookId);
+            if (existingCartOptional.isPresent()) {
+                // Nếu sản phẩm đã tồn tại, cập nhật số lượng và giá
+                AddToCart existingCart = existingCartOptional.get();
+                int newQty = existingCart.getQty() + qty;
+                float newTotal = (float)(existingCart.getTotal() + (qty * price));
+
+                existingCart.setQty(newQty);
+                existingCart.setTotal(newTotal);
+                addToCartRepository.updateQtyAndTotalByCartId(existingCart.getId(), newQty, newTotal);
+
+            } else {
+                // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
+                AddToCart obj = new AddToCart();
+                obj.setQty(qty);
+                obj.setUser_id(userId);
+                obj.setBook_id(bookId);
+                obj.setPrice(price);
+                obj.setTotal((float)(qty * price));
+                // Gán thông tin img và title từ đối tượng Book vào đối tượng AddToCart mới
+                obj.setTitle(book.getTitle());
+                obj.setImg(book.getImg());
+                addToCartRepository.save(obj);
+            }
+
+            return this.getCartByUserId(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
         }
-
-        Optional<AddToCart> existingCartOptional = addToCartRepository.getCartByBookIdAndUserId(userId, bookId);
-        if (existingCartOptional.isPresent()) {
-            // Nếu sản phẩm đã tồn tại, cập nhật số lượng và giá
-            AddToCart existingCart = existingCartOptional.get();
-            int newQty = existingCart.getQty() + qty;
-            float newTotal = (float)(existingCart.getTotal() + (qty * price));
-
-            existingCart.setQty(newQty);
-            existingCart.setTotal(newTotal);
-            addToCartRepository.updateQtyAndTotalByCartId(existingCart.getId(), newQty, newTotal);
-        } else {
-            // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
-            AddToCart obj = new AddToCart();
-            obj.setQty(qty);
-            obj.setUser_id(userId);
-            Book pro = bookService.getBookById(bookId);
-            obj.setBook_id(bookId);
-            obj.setPrice(price);
-            obj.setTotal((float)(qty * price));
-            addToCartRepository.save(obj);
-        }
-
-        return this.getCartByUserId(userId);
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new Exception(e.getMessage());
     }
-}
 
 
 
@@ -70,7 +79,16 @@ public List<AddToCart> addCartByUserIdAndBookId(int bookId, int userId, int qty,
 
     @Override
     public List<AddToCart> getCartByUserId(int userId) {
-        return addToCartRepository.getCartByUserId(userId);
+        List<AddToCart> cartItems = addToCartRepository.getCartByUserId(userId);
+        for (AddToCart item : cartItems) {
+            int bookId = item.getBook_id();
+            Book book = bookService.getBookById(bookId);
+            if (book != null) {
+                item.setTitle(book.getTitle());
+                item.setImg(book.getImg());
+            }
+        }
+        return cartItems;
     }
 
     @Override
