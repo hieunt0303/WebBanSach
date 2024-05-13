@@ -3,50 +3,98 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 
-const Cart = () => {
+const Cart = ({ cartItems, updateCartItems }) => {
   const navigate = useNavigate();
 
-  const [cartItems, setCartItems] = useState([]);
-  
+  //const [cartItems, setCartItems] = useState([]);
+  const [authData, setAuthData] = useState(null); // Khởi tạo state authData
+  const [totalPrice, setTotalPrice] = useState(0); // Khởi tạo state tổng tiền
+  const [errors, setErrors] = useState({});
 
+
+//lay giỏ hàng của 1usserId
 useEffect(() => {
   const fetchCartItems = async () => {
-      try {
-          const authData = JSON.parse(localStorage.getItem('auth-data'));
-          const userId = authData?.id;
-
-          if (!userId) {
-              console.log('Người dùng chưa đăng nhập.');
-              return;
-          }
-
-          const response = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
-              params: { userId: userId }
-          });
-
-          setCartItems(response.data);
-      } catch (error) {
-          console.error('Lỗi khi lấy danh sách sản phẩm từ giỏ hàng:', error);
+    try {
+      const authData = JSON.parse(localStorage.getItem('auth-data'));
+      setAuthData(authData); // Lưu authData vào state khi được lấy từ localStorage
+      
+      const userId = authData?.id;
+      if (!userId) {
+        console.log('Người dùng chưa đăng nhập.');
+        return;
       }
+
+      const response = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
+        params: { userId: userId }
+      });
+      updateCartItems(response.data);
+
+     // setCartItems(response.data);
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách sản phẩm từ giỏ hàng:', error);
+    }
   };
 
   fetchCartItems();
 }, []);
 
+// Tính tổng tiền
+useEffect(() => {
+  let totalPrice = 0;
+  cartItems.forEach(item => {
+    totalPrice += item.total;
+  });
+  totalPrice += 15000; // Phí ship mặc định
+  setTotalPrice(totalPrice);
+}, [cartItems]);
+
+//tăng giảm số luọng 
+
 const handleQuantityChange = async (cartItemId, newQuantity) => {
   try {
-      // Gửi yêu cầu cập nhật số lượng sản phẩm
-      const response = await axios.put(`http://localhost:8080/cart/updateQtyForCart`, {
-          cartId: cartItemId,
-          qty: newQuantity
-      });
+    if (newQuantity < 1) {
+      setErrors({ ...errors, [cartItemId]: 'lớn hơn hoặc = 1' });
+      return;
+    } else {
+      // Nếu không có lỗi, xóa thông báo lỗi và tiếp tục xử lý
+      if (errors[cartItemId]) {
+        const newErrors = { ...errors };
+        delete newErrors[cartItemId];
+        setErrors(newErrors);
+      }
+    }
 
-      // Cập nhật số lượng sản phẩm trong giỏ hàng và tổng tiền
-      setCartItems(response.data);
+    const response = await axios.put(`http://localhost:8080/cart/updateQtyForCart`, {
+      cartId: cartItemId,
+      qty: newQuantity
+    });
+
+    const updatedCartItemsResponse = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
+      params: { userId: authData?.id }
+    });
+
+    updateCartItems(updatedCartItemsResponse.data);
   } catch (error) {
-      console.error('Lỗi khi cập nhật số lượng sản phẩm:', error);
+    console.error('Lỗi khi cập nhật số lượng sản phẩm:', error);
   }
 };
+
+/// xóa san phẩm trong cart
+const handleRemoveItem = async (cartItemId) => {
+  try {
+    const response = await axios.delete(`http://localhost:8080/cart/removeBookFromCart`, {
+      data: { userId: authData?.id, cartId: cartItemId } // Gửi userId và cartId để xóa sản phẩm
+    });
+
+    // setCartItems(cartItems.filter(item => item.id !== cartItemId)); // Xóa sản phẩm khỏi danh sách hiện tại
+    updateCartItems(cartItems.filter(item => item.id !== cartItemId)); // Xóa sản phẩm khỏi danh sách hiện tại
+
+  } catch (error) {
+    console.error('Lỗi khi xóa sản phẩm từ giỏ hàng:', error);
+  }
+};
+
 
   return (
     <>  
@@ -108,12 +156,14 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
                                     </button>
                                 </div>
                             </div>
+                            {errors[item.id] && <p className="text-danger">{errors[item.id]}</p>}        
+
                         </td>
                     <td>
                       <p className="mb-0 mt-4">{item.total}vnđ</p>
                     </td>
                     <td>
-                      <button className="btn btn-md rounded-circle bg-light border mt-4">
+                      <button className="btn btn-md rounded-circle bg-light border mt-4" onClick={() => handleRemoveItem(item.id)}>
                         <i className="fa fa-times text-danger" />
                       </button>
                     </td>
@@ -129,21 +179,24 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
         <div className="bg-light rounded">
           <div className="p-4">
             <h1 className="display-6 mb-4"> <span className="fw-normal">Tổng tiền</span></h1><br></br>
-            <div className="d-flex justify-content-between mb-4">
-              <h5 className="mb-0 me-4">Tên sản phẩm:</h5>
-              <p className="mb-0">85.000vnđ</p>
-            </div><br></br>
+            {cartItems.map(item => (
+                    <div key={item.id} className="d-flex justify-content-between mb-2">
+                      <h5 className="mb-0 me-4">{item.title}</h5>
+                      <p className="mb-0">{item.price * item.qty}vnđ</p>
+                    </div>
+                  ))}
+        <br></br>
             <div className="d-flex justify-content-between">
               <h5 className="mb-0 me-4">Phí ship</h5>
               <div className>
-                <p className="mb-0">30.000vnđ</p>
+                <p className="mb-0">15000vnđ</p>
               </div>
             </div>
            
           </div>
           <div className="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
             <h5 className="mb-0 ps-4 me-4">Tổng</h5>
-            <p className="mb-0 pe-4">85.000vnđ</p>
+            <p className="mb-0 pe-4">{totalPrice}vnđ</p>
           </div>
           <button className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button" ><Link to="/checkout" >Thanh Toán</Link></button>
         </div>

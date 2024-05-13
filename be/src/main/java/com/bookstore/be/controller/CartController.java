@@ -24,35 +24,7 @@ public class CartController {
     @Autowired
     private BookService bookService;
 
-//@PostMapping("/addBookToCart")
-//public ResponseEntity<?> addCartwithBook(@RequestBody HashMap<String, String> addCartRequest) {
-//    try {
-//        if (!addCartRequest.containsKey("bookId") || !addCartRequest.containsKey("userId")
-//                || !addCartRequest.containsKey("qty") || !addCartRequest.containsKey("price")
-//                || !addCartRequest.containsKey("total")) {
-//            throw new IllegalArgumentException("Required fields are missing.");
-//        }
-//
-//        int bookId = Integer.parseInt(addCartRequest.get("bookId"));
-//        int userId = Integer.parseInt(addCartRequest.get("userId"));
-//        int qty = Integer.parseInt(addCartRequest.get("qty"));
-//        double price = Double.parseDouble(addCartRequest.get("price"));
-//        float total = Float.parseFloat(addCartRequest.get("total"));
-//
-//        List<AddToCart> obj = addToCartService.addCartByUserIdAndBookId(bookId, userId, qty, price, total);
-//        return ResponseEntity.ok(obj);
-//    } catch (NumberFormatException e) {
-//        // Xử lý lỗi chuyển đổi dữ liệu
-//        HashMap<String, String> errorResponse = new HashMap<>();
-//        errorResponse.put("error", "Invalid data format.");
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-//    } catch (Exception e) {
-//        // Xử lý các lỗi khác
-//        HashMap<String, String> errorResponse = new HashMap<>();
-//        errorResponse.put("error", e.getMessage());
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-//    }
-//}
+
 @PostMapping("/addBookToCart")
 public ResponseEntity<?> addCartwithBook(@RequestBody HashMap<String, String> addCartRequest) {
     try {
@@ -108,8 +80,20 @@ public ResponseEntity<?> addCartwithBook(@RequestBody HashMap<String, String> ad
                 throw new IllegalArgumentException("Required fields are missing.");
             }
 
-            List<AddToCart> obj = addToCartService.removeCartByUserId(
-                    Integer.parseInt(removeCartRequest.get("cartId")), Integer.parseInt(removeCartRequest.get("userId")));
+            int userId = Integer.parseInt(removeCartRequest.get("userId"));
+            int cartId = Integer.parseInt(removeCartRequest.get("cartId"));
+
+            // Kiểm tra sự tồn tại của userId và cartId trong cơ sở dữ liệu
+            if (!userService.isUserExists(userId)) {
+                throw new IllegalArgumentException("User does not exist.");
+            }
+
+            if (!addToCartService.isCartItemExists(cartId)) {
+                throw new IllegalArgumentException("Cart item does not exist.");
+            }
+
+            // Xóa sản phẩm từ giỏ hàng
+            List<AddToCart> obj = addToCartService.removeCartByUserId(cartId, userId);
             return ResponseEntity.ok(obj);
         } catch (Exception e) {
             HashMap<String, String> errorResponse = new HashMap<>();
@@ -118,55 +102,34 @@ public ResponseEntity<?> addCartwithBook(@RequestBody HashMap<String, String> ad
         }
     }
 
-@GetMapping("/getCartsByUserId")
-public ResponseEntity<?> getCartsByUserId(@RequestParam HashMap<String, String> getCartRequest) {
-    try {
-        if (!getCartRequest.containsKey("userId")) {
-            throw new IllegalArgumentException("Required fields are missing.");
-        }
-
-        int userId = Integer.parseInt(getCartRequest.get("userId"));
-
-        List<AddToCart> cartItems = addToCartService.getCartByUserId(userId);
-
-        // Lặp qua mỗi mục trong giỏ hàng và lấy thông tin chi tiết từ bảng sách
-        for (AddToCart item : cartItems) {
-            int bookId = item.getBook_id(); // Chuyển đổi book_id sang kiểu số nguyên
-            Book book = bookService.getBookById(bookId); // Lấy thông tin chi tiết của sách
-            item.setTitle(book.getTitle());
-            item.setImg(book.getImg());
-        }
-
-        return ResponseEntity.ok(cartItems);
-    } catch (Exception e) {
-        HashMap<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
-}
-    @GetMapping("/getUserCart/{userId}")
-    public ResponseEntity<?> getUserCart(@PathVariable int userId) {
+    @GetMapping("/getCartsByUserId")
+    public ResponseEntity<?> getCartsByUserId(@RequestParam HashMap<String, String> getCartRequest) {
         try {
-            // Kiểm tra sự tồn tại của userId trong CSDL
-            if (!userService.isUserExists(userId)) {
-                throw new IllegalArgumentException("User does not exist.");
+            if (!getCartRequest.containsKey("userId")) {
+                throw new IllegalArgumentException("Required fields are missing.");
             }
 
-            // Lấy danh sách sản phẩm trong giỏ hàng của userId đã cho
+            int userId = Integer.parseInt(getCartRequest.get("userId"));
+
             List<AddToCart> cartItems = addToCartService.getCartByUserId(userId);
+
+            // Lặp qua mỗi mục trong giỏ hàng và lấy thông tin chi tiết từ bảng sách
+            for (AddToCart item : cartItems) {
+                int bookId = item.getBook_id(); // Chuyển đổi book_id sang kiểu số nguyên
+                Book book = bookService.getBookById(bookId); // Lấy thông tin chi tiết của sách
+                item.setTitle(book.getTitle());
+                item.setImg(book.getImg());
+            }
+
             return ResponseEntity.ok(cartItems);
-        } catch (IllegalArgumentException e) {
-            // Xử lý lỗi nếu userId không tồn tại
-            HashMap<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
-            // Xử lý các lỗi khác
             HashMap<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
-    }
+
+}
+
 
     @PutMapping("/updateQtyForCart")
     public ResponseEntity<?> updateQtyForCart(@RequestBody HashMap<String, String> updateCartRequest) {
