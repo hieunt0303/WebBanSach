@@ -4,9 +4,12 @@ import React, { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ cartItems }) => {
   const navigate = useNavigate();
   const [infoUser, setInfoUser] = useState(null)
+    // Tính tổng số sản phẩm trong giỏ hàng
+    const totalItems = cartItems.length;
+
 
   useEffect(() => {
     //check xem trong localStorage có biến auth-data hay chưa
@@ -110,7 +113,7 @@ const Header = () => {
                     className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                     style={{ top: "-5px", left: "15px", height: "20px", minWidth: "20px" }}
                   >
-                    3
+                     {totalItems}
                   </span>
 
                   {/* <span className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style={{top: -5px; left: 15px; height: 20px; min-width: 20px;}}>3</span> */}
