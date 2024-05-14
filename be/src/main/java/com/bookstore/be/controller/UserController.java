@@ -40,8 +40,8 @@ public class UserController {
             @PathVariable int userId,
             @RequestBody Map<String, String> passwords
     ) {
-        String password = passwords.get("password");
-        String repassword = passwords.get("repassword");
+        String password = passwords.get("newPassword");
+        String repassword = passwords.get("confirmPassword");
         // Gọi phương thức changePassword từ UserService
         return userService.changePassword(userId, password, repassword);
     }

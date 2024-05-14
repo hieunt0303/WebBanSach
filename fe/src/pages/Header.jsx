@@ -132,7 +132,7 @@ const Header = () => {
                   infoUser && <div onClick={()=>{
                     localStorage.removeItem('auth-data');
                     window.location.reload('/login')
-                  }} > dang xuat</div>
+                  }} > <i className="fas fa-power-off fa-2x" style={{ marginLeft: '10px' }}></i></div>
                 }
               </div>
             </div>
