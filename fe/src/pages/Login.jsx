@@ -77,9 +77,10 @@ const Login = () => {
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <button type="submit">Đăng Nhập</button>
             <p className={loginStyles.quen} style={{ textAlign: "right" }}>
-              <a className={loginStyles.ab} href="">
+            <Link className={loginStyles.ab} to="/forgotpassword">
+              
                 Quên Mật Khẩu?
-              </a>
+              </Link>
             </p>
 
             <p>
