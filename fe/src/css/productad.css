@@ -1,0 +1,62 @@
+.button {
+    background-color: #81c408a6; /* Green */
+    border: none;
+    color: white;
+    padding: 13px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  
+  
+  .button3 {border-radius: 8px;}
+  a {
+    color: #000000a1;
+    text-decoration: none;
+}
+.product__add {
+    text-align: right;
+}
+.dssp {
+    margin-top: 2.5rem !important;
+}
+.adminuser {
+    width: 500px;
+    margin: auto;
+}
+.product__add {
+    width: 100%;
+    padding: 10px;
+}
+
+.fromsearch-adduser {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fromsearch {
+    flex: 1;
+}
+
+.adduser {
+    margin-left: 20px;
+}
+
+.form-inline {
+    display: flex;
+    width: 100%;
+}
+
+.input-group {
+    width: 100%;
+}
+
+
+
+.button3:hover {
+    background-color: #45a049;
+}

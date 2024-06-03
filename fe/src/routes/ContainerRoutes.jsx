@@ -16,6 +16,16 @@ import Detail from "../pages/Detail";
 import Cart from "../pages/Cart";
 import ThongTin from '../pages/ThongTin'
 import Checkout from "../pages/Checkout";
+import HomeAd from"../admin/HomeAd";
+import OrderManagement from "../admin/OrderManagement";
+import ProductManagement from "../admin/ProductManagement ";
+import UserManagement from "../admin/UserManagement";
+import AddUser from "../admin/addUser";
+import EditUser from "../admin/EditUser";
+import AddP from '../admin/AddProduct';
+import EditP from '../admin/EditProduct';
+
+
 
 
 
@@ -47,6 +57,14 @@ const ContainerRoutes = () => {
           element={<Cart cartItems={cartItems} updateCartItems={updateCartItems} authData={authData} />} // Pass cartItems and updateCartItems as props to Cart
         />        <Route path="thongTin" element={<ThongTin />} />
         <Route path="checkout" element={<Checkout/>}/>
+        <Route path="homeAd" element={<HomeAd/>}/>
+        <Route path="orderManagement" element={<OrderManagement/>}/>
+        <Route path="productManagement" element={<ProductManagement/>}/>
+        <Route path="userManagement" element={<UserManagement/>}/>
+        <Route path="addUser" element={<AddUser/>}/>
+        <Route path="editUser" element={<EditUser/>}/>
+        <Route path="addProduct" element={<AddP/>}/>
+        <Route path="editProduct" element={<EditP/>}/>
 
 
       </Routes>
