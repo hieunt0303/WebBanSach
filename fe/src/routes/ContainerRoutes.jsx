@@ -38,7 +38,7 @@ const ContainerRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="" element={<Home />} />
         <Route path="register" element={<Register />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="forgotpassword" element={<ForgotPassword />} />
         <Route path="product" element={<Product />} />
         <Route path="contact" element={<Contact />} />
         <Route path="/detail/:id" element={<Detail authData={authData} updateCartItems={updateCartItems} />} />
