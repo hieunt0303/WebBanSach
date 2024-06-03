@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ThongtinStyle from '../css/thongtin.module.css'
 import { Link, useNavigate } from "react-router-dom";
@@ -11,7 +11,9 @@ const ThongTin = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
+//
 
+const [userInfo, setUserInfo] = useState({});
 
     // Xử lý khi người dùng nhấn nút "Lưu"
     const handlePasswordChange = async (e) => {
@@ -64,6 +66,19 @@ const ThongTin = () => {
         setNewPassword('');
         setConfirmPassword('');
     };
+
+    useEffect(() => {
+        // Lấy thông tin người dùng từ localStorage khi component được render
+        const storedUserData = JSON.parse(localStorage.getItem('auth-data'));
+        if (storedUserData) {
+            setUserInfo({
+                name: storedUserData.name,
+                email: storedUserData.email,
+                numberphone: storedUserData.numberphone,
+            });            
+            
+        }
+    }, []);
 
     return (
         <>
@@ -156,19 +171,16 @@ const ThongTin = () => {
                                                                     <div className="row">
                                                                         <div className="col-6">
                                                                             <p className="p441"><b>Tên đăng nhập</b></p>
-                                                                            <p>uname</p>
+                                                                            <p>{userInfo.name}</p>
                                                                         </div>
-                                                                        <div className="col-6">
-                                                                            <p className="p441"><b>Họ và tên</b></p>
-                                                                            <p>fullName</p>
-                                                                        </div>
+                                                                       
                                                                         <div className="col-6">
                                                                             <p className="p441"><b>Email</b></p>
-                                                                            <p>email</p>
+                                                                            <p>{userInfo.email}</p>
                                                                         </div>
                                                                         <div className="col-6">
                                                                             <p className="p441"><b>Số điện thoại</b></p>
-                                                                            <p>phone</p>
+                                                                            <p>{userInfo.numberphone}</p>
                                                                         </div>
                                                                         <div className="col-6">
                                                                             <p className="p441"><b>Địa chỉ</b></p>
