@@ -4,6 +4,8 @@ import {
   Routes,
   
 } from "react-router-dom";
+import axios from 'axios';
+
 import Header from "../pages/Header";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -34,11 +36,42 @@ import Thankyou from '../pages/Thankyou';
 
 
 const ContainerRoutes = () => {
-  const [cartItems, setCartItems] = useState([]); 
-  const [authData, setAuthData] = useState(null); 
+  // const [cartItems, setCartItems] = useState([]); 
+   const [authData, setAuthData] = useState(null); 
 
 
-  // Function to update cartItems state
+  // // Function to update cartItems state
+  // const updateCartItems = (items) => {
+  //   setCartItems(items);
+  // };
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const authData = JSON.parse(localStorage.getItem('auth-data'));
+        setAuthData(authData); // Lưu authData vào state khi được lấy từ localStorage
+        
+        const userId = authData?.id;
+        if (!userId) {
+          console.log('Người dùng chưa đăng nhập.');
+          return;
+        }
+  
+        const response = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
+          params: { userId: userId }
+        });
+        updateCartItems(response.data);
+  
+       // setCartItems(response.data);
+      } catch (error) {
+        console.error('Lỗi khi lấy danh sách sản phẩm từ giỏ hàng:', error);
+      }
+    };
+  
+    fetchCartItems();
+  }, []);
+
   const updateCartItems = (items) => {
     setCartItems(items);
   };

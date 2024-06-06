@@ -45,7 +45,6 @@ useEffect(() => {
   cartItems.forEach(item => {
     totalPrice += item.total;
   });
-  totalPrice += 15000; // Phí ship mặc định
   setTotalPrice(totalPrice);
 }, [cartItems]);
 
@@ -187,10 +186,10 @@ const handleRemoveItem = async (cartItemId) => {
                   ))}
         <br></br>
             <div className="d-flex justify-content-between">
-              <h5 className="mb-0 me-4">Phí ship</h5>
-              <div className>
+              {/* <h5 className="mb-0 me-4">Phí ship</h5> */}
+              {/* <div className>
                 <p className="mb-0">15000vnđ</p>
-              </div>
+              </div> */}
             </div>
            
           </div>

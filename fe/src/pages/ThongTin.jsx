@@ -116,9 +116,7 @@ const [userInfo, setUserInfo] = useState({});
                                                             <Nav.Item>
                                                                 <Nav.Link eventKey="fourth">Đổi mật khẩu</Nav.Link>
                                                             </Nav.Item>
-                                                            <Nav.Item>
-                                                                <Nav.Link eventKey="five">Đăng xuất</Nav.Link>
-                                                            </Nav.Item>
+                                                           
                                                         </Nav>
                                                     </Col>
                                                     <Col sm={9}>
@@ -182,10 +180,7 @@ const [userInfo, setUserInfo] = useState({});
                                                                             <p className="p441"><b>Số điện thoại</b></p>
                                                                             <p>{userInfo.numberphone}</p>
                                                                         </div>
-                                                                        <div className="col-6">
-                                                                            <p className="p441"><b>Địa chỉ</b></p>
-                                                                            <p>address</p>
-                                                                        </div>
+                                                                        
 
 
                                                                     </div>
