@@ -24,6 +24,8 @@ import AddUser from "../admin/addUser";
 import EditUser from "../admin/EditUser";
 import AddP from '../admin/AddProduct';
 import EditP from '../admin/EditProduct';
+import Thankyou from '../pages/Thankyou';
+// import Thankyou from '../pages/thankyou';
 
 
 
@@ -56,7 +58,9 @@ const ContainerRoutes = () => {
           path="cart"
           element={<Cart cartItems={cartItems} updateCartItems={updateCartItems} authData={authData} />} // Pass cartItems and updateCartItems as props to Cart
         />        <Route path="thongTin" element={<ThongTin />} />
-        <Route path="checkout" element={<Checkout/>}/>
+        <Route path="checkout" element={<Checkout cartItems={cartItems}/>}/>
+        <Route path='thankyou' element={<Thankyou/>}/>
+
         <Route path="homeAd" element={<HomeAd/>}/>
         <Route path="orderManagement" element={<OrderManagement/>}/>
         <Route path="productManagement" element={<ProductManagement/>}/>
@@ -65,6 +69,8 @@ const ContainerRoutes = () => {
         <Route path="editUser" element={<EditUser/>}/>
         <Route path="addProduct" element={<AddP/>}/>
         <Route path="editProduct" element={<EditP/>}/>
+        
+        {/* <Route path ="thankyou" element={<Thankyou/>}/> */}
 
 
       </Routes>

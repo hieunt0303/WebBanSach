@@ -9240,3 +9240,6 @@ input.w-100.form-control.border-0.py-3.mb-4 {
   
   margin-top: 25px;
 }
+.input-group.w-100.mx-auto.d-flex {
+  flex-wrap: wrap;
+}
