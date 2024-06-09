@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate,useParams  } from "react-router-dom";
+import { Link, Navigate, useNavigate,useParams  } from "react-router-dom";
 import axios from 'axios';
 import "../css/productad.css"
 const EditP = () => {
@@ -23,6 +23,61 @@ const EditP = () => {
               setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion")
           }
       };
+      const { id } = useParams(); // Lấy id sản phẩm từ đường dẫn URL
+      const [product, setProduct] = useState({
+        category: { id: '' } // Khởi tạo category dưới dạng đối tượng với id
+    });
+      const [categories, setCategories] = useState([]); 
+
+      const navigate = useNavigate();
+  
+    useEffect(() => {
+      //lấy book theo id
+      axios.get(`http://localhost:8080/book/getBookById/${id}`)
+          .then(response => {
+              console.log('Product data:', response.data);
+              setProduct(response.data);
+          })
+          .catch(error => {
+              console.error('Error fetching product:', error);
+          });
+  
+      //lay tat cả cate
+      axios.get('http://localhost:8080/category/getAllCate')
+          .then(response => {
+              console.log('Categories data:', response.data);
+              setCategories(response.data);
+          })
+          .catch(error => {
+              console.error('Error fetching categories:', error);
+          });
+  }, [id]);
+
+  const handleSubmit = (event) => {
+      event.preventDefault();
+      const updatedProduct = {
+          ...product,
+          category: { id: parseInt(product.category.id, 10) } //id cate là 1 so nguyen
+      };
+      axios.put(`http://localhost:8080/book/updateBook/${id}`, updatedProduct)
+          .then(response => {
+              console.log('Product updated successfully:', response.data);
+              navigate('/productManagement');
+          })
+          .catch(error => {
+              console.error('Error updating product:', error);
+          });
+  };
+
+  const handleChange = (event) => {
+      const { name, value } = event.target;
+      if (name === "category") {
+          // Update category ID
+          setProduct({ ...product, category: { id: value } });
+      } else {
+          setProduct({ ...product, [name]: value });
+      }
+  };
   
     return (
         <>  
@@ -265,42 +320,49 @@ const EditP = () => {
                         </div>
                        <div className=''>
                     
-                        <form onSubmit="">
-                <div>
+                       <form onSubmit={handleSubmit}>
+                                        <div>
                     <label>Tên sách:</label>
-                    <input type="text" name="name" value="" onChange="" required />
+                    <input type="text" name="title" value={product.title || ''} onChange={handleChange} required />
                 </div>
                 <div>
                     <label>Tác giả:</label>
-                    <input type="email" name="email" required />
+                    <input type="text" name="author" value={product.author || ''} onChange={handleChange} required />
                 </div>
                 <div>
                     <label>Mô tả:</label>
-                    <input type="email" name="email" required />
+                    <input type="text" name="description"value={product.description || ''} onChange={handleChange} required />
                 </div>
                 <div>
                     <label>Ảnh:</label>
-                    <input type="email" name="email" required />
+                    <input type="text" name="img" value={product.img || ''} onChange={handleChange} required />
                 </div>
                 <div>
                     <label>Giá:</label>
-                    <input type="email" name="email" required />
+                    <input type="number" name="price"value={product.price || ''} onChange={handleChange} required />
                 </div>
                
                 <div>
                     <label>Số lượng:</label>
-                    <input type="email" name="email" required />
+                    <input type="number" name="quantity"value={product.quantity || ''} onChange={handleChange} required />
                 </div>
-                <div>
-                    <label>Thể loại:</label>
-                   
-                    <select name="role"  required>
-                        <option value="vh">Văn học</option>
-                        <option value="tn">Thiếu nhi</option>
-                        <option value="kt">Kinh tế</option>
-                        <option value="kns">Kỹ năng sống</option>
-                    </select>
-                </div>
+                <div >
+                                            <label>Danh mục:</label>
+                                            <select 
+                                               
+                                                name="category" 
+                                                value={product.category.id || ''} 
+                                                onChange={handleChange} 
+                                                
+                                            >
+                                                <option value="" disabled>Chọn danh mục</option>
+                                                {categories.map(category => (
+                                                    <option key={category.id} value={category.id}>
+                                                        {category.nameC}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                
                 <button type="submit">Lưu</button>
             </form>

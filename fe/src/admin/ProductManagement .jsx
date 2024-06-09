@@ -3,6 +3,81 @@ import { Link, useNavigate,useParams  } from "react-router-dom";
 import axios from 'axios';
 import "../css/productad.css"
 const ProductManagement = () => {
+
+
+ //lay dl sách
+ const [books, setBooks] = useState([]);
+
+ useEffect(() => {
+   axios.get('http://localhost:8080/book/getAllBook')
+     .then(response => {
+       setBooks(response.data);
+     })
+     .catch(error => {
+       console.error('Error fetching books:', error);
+     });
+ }, []);
+ //xóa
+ const deleteBook = (id) => {
+   axios.delete(`http://localhost:8080/book/delete/${id}`)
+     .then(response => {
+       //        Làm mới danh sách sách sau khi xóa
+       setBooks(books.filter(book => book.id !== id));
+     })
+     .catch(error => {
+       console.error('Error deleting book:', error);
+     });
+ };
+ //phân trang
+ const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 6; // 6 san phẩm trong 1 trang
+
+const paginatedBooks = books.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
+//chuyen trang
+const handlePrevPage = () => {
+  if (currentPage > 1) {
+    setCurrentPage(currentPage - 1);
+  }
+};
+
+const handleNextPage = () => {
+  if (currentPage < Math.ceil(books.length / itemsPerPage)) {
+    setCurrentPage(currentPage + 1);
+  }
+};
+
+const handlePageClick = (pageNumber) => {
+  setCurrentPage(pageNumber);
+};
+//tim kiem
+const [keyword, setKeyword] = useState("");
+useEffect(() => {
+  const fetchBooks = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/book/search`, {
+        params: { keyword }
+      });
+      setBooks(response.data);
+      setCurrentPage(1); // Reset to first page on new search
+    } catch (error) {
+      console.error('Error fetching books:', error);
+    }
+  };
+
+  fetchBooks();
+}, [keyword]);
+ // Xử lý đầu vào tìm kiếm
+ const handleSearchInput = (e) => {
+  setKeyword(e.target.value);
+};
+
+const handleSearchSubmit = (e) => {
+  e.preventDefault();
+};
+
     const [style, setStyle] = useState("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion");
 
       const changeStyle = () => {
@@ -267,23 +342,25 @@ const ProductManagement = () => {
                         <div className="product__add">
             <div className="fromsearch-adduser">
                 <div className="fromsearch">
-                    <form className="form-inline">
-                        <div className="input-group">
+                <form className="form-inline" onSubmit={handleSearchSubmit}>
+                          <div className="input-group">
                             <input
-                                type="text"
-                                className="form-control bg-light border-0 small"
-                                placeholder="Search for..."
-                                aria-label="Search"
-                                aria-describedby="basic-addon2"
-                                style={{ height: 'unset', width: '600px' }}
+                              type="text"
+                              className="form-control bg-light border-0 small"
+                              placeholder="tìm kiếm sách"
+                              aria-label="Search"
+                              aria-describedby="basic-addon2"
+                              style={{ height: 'unset', width: '600px' }}
+                              value={keyword}
+                              onChange={handleSearchInput}
                             />
                             <div className="input-group-append">
-                                <button className="btn btn-primary" type="button">
-                                    <i className="fas fa-search fa-sm" />
-                                </button>
+                              <button className="btn btn-primary" type="submit">
+                                <i className="fas fa-search fa-sm" />
+                              </button>
                             </div>
-                        </div>
-                    </form>
+                          </div>
+                        </form>
                 </div>
                 <div className="adduser">
                     <Link to="/addProduct">
@@ -301,21 +378,47 @@ const ProductManagement = () => {
                             <th>Hình ảnh</th>
                             <th>Tên sản phẩm</th>
                             <th>Giá</th>
-                            <th>Xóa</th>
-                            <th>Sửa</th>
+                            <th>Thao tác</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td></td>
-                            <td><img alt="hinhSP" style={{width: 100}} src="../images/product/${sp.img}" /></td>
-                            <td style={{maxWidth: 225}}></td>
-                            <td></td>
-                            <td><Link to="/"><button className="btn btn-warning"><i className="	fas fa-trash-alt " /></button></Link></td>
-                            <td><Link to="/editProduct"><button className="btn btn-primary"><i className="fa fa-pencil" /></button></Link></td>
+                       
+                         <tbody>
+                       
+              {paginatedBooks.map((book, index) => (
+                        <tr key={index}>
+                          <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                          <td><img alt={book.title} style={{ width: 100 }} src={book.img} /></td>
+                          <td>{book.title}</td>
+                          <td>{book.price}</td>
+                          <td>
+                            <Link to={`/editProduct/${book.id}`}>
+                              <button className="btn btn-primary">
+                                <i className="fa fa-pencil" />
+                              </button>
+                            </Link> |
+                            <button className="btn btn-warning" onClick={() => deleteBook(book.id)}>
+                              <i className="fas fa-trash-alt" />
+                            </button>
+                          </td>
                         </tr>
-                        </tbody>
+                      ))}
+          </tbody>
+             
+
                     </table>
+                    <div className="pagination">
+                    <button onClick={handlePrevPage} disabled={currentPage === 1}>«</button>
+                    {Array.from({ length: Math.ceil(books.length / itemsPerPage) }, (_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handlePageClick(index + 1)}
+                        className={currentPage === index + 1 ? 'active' : ''}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                    <button onClick={handleNextPage} disabled={currentPage === Math.ceil(books.length / itemsPerPage)}>»</button>
+                  </div>
             
     
          
