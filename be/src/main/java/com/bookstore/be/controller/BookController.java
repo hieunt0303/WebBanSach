@@ -1,19 +1,28 @@
 package com.bookstore.be.controller;
 
 import com.bookstore.be.model.Book;
+import com.bookstore.be.model.Category;
 import com.bookstore.be.repository.BookRepository;
 import com.bookstore.be.repository.CategoryRepository;
 import com.bookstore.be.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/book")
+@Validated
 public class BookController {
     @Autowired
     private BookService bookService;
@@ -23,18 +32,14 @@ public class BookController {
     private CategoryRepository categoryRepository;
 
     //Tạo, thêm mới book
+
     @PostMapping("/addBook")
-//    public String addBook(@RequestBody Book book){
-//        bookService.saveBook(books);
-//        return "new book";
-//    }
-    public ResponseEntity<?> addBooks(@RequestBody List<Book> books) {
-        try {
+
+    public ResponseEntity<?> addBooks( @RequestBody @Valid List<Book> books) {
+
             List<Book> savedBooks = bookService.saveBook(books);
             return ResponseEntity.ok(savedBooks);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while adding categories");
-        }
+
     }
 
 
@@ -99,10 +104,17 @@ public class BookController {
 
         bookToUpdate.setTitle(newBook.getTitle());
         bookToUpdate.setAuthor(newBook.getAuthor());
+        bookToUpdate.setImg(newBook.getImg());
+
         bookToUpdate.setDescription(newBook.getDescription());
         bookToUpdate.setPrice(newBook.getPrice());
-        bookToUpdate.setCategory(newBook.getCategory());
-
+       // bookToUpdate.setCategory(newBook.getCategory());
+// Handle category
+        Category category = categoryRepository.findById(newBook.getCategory().getId()).orElse(null);
+        if (category == null) {
+            return ResponseEntity.badRequest().build(); // Or handle error as needed
+        }
+        bookToUpdate.setCategory(category);
         bookRepository.save(bookToUpdate);
 
         return ResponseEntity.noContent().build();

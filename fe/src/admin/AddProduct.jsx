@@ -23,7 +23,90 @@ const AddP = () => {
               setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion")
           }
       };
-  
+      
+       const navigate = useNavigate();
+      
+      // Khai báo state để lưu trữ dữ liệu và thông báo lỗi từ backend
+      const [formData, setFormData] = useState({
+        name: '',
+        author: '',
+        description: '',
+        image: '',
+        price: '',
+        quantity: '',
+        category: '1'
+      });
+      //const [errors, setErrors] = useState({});
+      const [errors, setErrors] = useState({
+        name: '',
+        author: '',
+        description: '',
+        image: '',
+        price: '',
+        quantity: '',
+        category: ''
+      });
+    
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+          const bookData = {
+            title: formData.name,
+            author: formData.author,
+            description: formData.description,
+            img: formData.image,
+            price: Number(formData.price),
+            quantity: Number(formData.quantity),
+            category: { id: Number(formData.category) }
+          };
+      
+          await axios.post('http://localhost:8080/book/addBook', [bookData]);
+          alert('Sách đã được thêm thành công!');
+          navigate('/productManagement');
+          setErrors({
+            name: '',
+            author: '',
+            description: '',
+            image: '',
+            price: '',
+            quantity: '',
+            category: ''
+          });
+        } catch (error) {
+          if (error.response && error.response.status === 400) {
+            const errorData = error.response.data;
+      
+            // Xử lý lỗi khi errorData không phải là một mảng
+            const serverErrors = {};
+            for (const field in errorData) {
+              if (errorData.hasOwnProperty(field)) {
+                serverErrors[field] = errorData[field];
+              }
+            }
+            setErrors(serverErrors);
+          } else {
+            console.error('Có lỗi xảy ra khi thêm sách!', error);
+            if (error.response && error.response.data) {
+              console.error(error.response.data.message);
+            } else {
+              alert('Thêm sách thất bại!');
+            }
+          }
+        }
+      };
+      
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+          ...prevState,
+          [name]: value
+        }));
+        //         Xóa thông báo lỗi khi giá trị đầu vào thay đổi
+        setErrors(prevState => ({
+          ...prevState,
+          [name]: ''// Xóa thông báo lỗi cho trường tương ứng
+        }));
+      };
     return (
         <>  
     
@@ -265,46 +348,83 @@ const AddP = () => {
                         </div>
                        <div className=''>
                     
-                        <form onSubmit="">
-                <div>
-                    <label>Tên sách:</label>
-                    <input type="text" name="name" value="" onChange="" required />
-                </div>
-                <div>
-                    <label>Tác giả:</label>
-                    <input type="email" name="email" required />
-                </div>
-                <div>
-                    <label>Mô tả:</label>
-                    <input type="email" name="email" required />
-                </div>
-                <div>
-                    <label>Ảnh:</label>
-                    <input type="email" name="email" required />
-                </div>
-                <div>
-                    <label>Giá:</label>
-                    <input type="email" name="email" required />
-                </div>
-               
-                <div>
-                    <label>Số lượng:</label>
-                    <input type="email" name="email" required />
-                </div>
-                <div>
-                    <label>Thể loại:</label>
-                   
-                    <select name="role"  required>
-                        <option value="vh">Văn học</option>
-                        <option value="tn">Thiếu nhi</option>
-                        <option value="kt">Kinh tế</option>
-                        <option value="kns">Kỹ năng sống</option>
-                    </select>
-                </div>
-               
-                <button type="submit">Lưu</button>
-            </form>
-            
+                       <form onSubmit={handleSubmit}>
+  <div>
+    <label>Tên sách:</label>
+    <input
+      type="text"
+      name="name"
+      value={formData.name}
+      onChange={handleChange}
+    />
+    {errors && errors['addBooks.books[0].title'] && <span className="error">{errors['addBooks.books[0].title']}</span>}
+  </div>
+  <div>
+    <label>Tác giả:</label>
+    <input
+      type="text"
+      name="author"
+      value={formData.author}
+      onChange={handleChange}
+    />
+    {errors && errors['addBooks.books[0].author'] && <span className="error">{errors['addBooks.books[0].author']}</span>}
+  </div>
+  <div>
+    <label>Mô tả:</label>
+    <textarea
+      name="description"
+      value={formData.description}
+      onChange={handleChange}
+    />
+    {errors && errors['addBooks.books[0].description'] && <span className="error">{errors['addBooks.books[0].description']}</span>}
+  </div>
+  <div>
+    <label>Ảnh:</label>
+    <input
+      type="text"
+      name="image"
+      value={formData.image}
+      onChange={handleChange}
+    />
+    {errors && errors['addBooks.books[0].img'] && <span className="error">{errors['addBooks.books[0].img']}</span>}
+  </div>
+  <div>
+    <label>Giá:</label>
+    <input
+      type="number"
+      name="price"
+      value={formData.price}
+      onChange={handleChange}
+    />
+    {errors && errors['addBooks.books[0].price'] && <span className="error">{errors['addBooks.books[0].price']}</span>}
+  </div>
+  <div>
+    <label>Số lượng:</label>
+    <input
+      type="number"
+      name="quantity"
+      value={formData.quantity}
+      onChange={handleChange}
+    />
+    {errors && errors['addBooks.books[0].quantity'] && <span className="error">{errors['addBooks.books[0].quantity']}</span>}
+  </div>
+  <div>
+    <label>Thể loại:</label>
+    <select
+      name="category"
+      value={formData.category}
+      onChange={handleChange}
+    >
+      <option value="1">Văn học</option>
+      <option value="2">Thiếu nhi</option>
+      <option value="3">Kinh tế</option>
+      <option value="4">Kỹ năng sống</option>
+    </select>
+    {errors && errors['addBooks.books[0].category'] && <span className="error">{errors['addBooks.books[0].category']}</span>}
+  </div>
+  <button type="submit">Lưu</button>
+</form>
+
             </div>
     
          

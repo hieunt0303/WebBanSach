@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const Product = () => {
     const navigate = useNavigate();
-    const [selectedCategoryName, setSelectedCategoryName] = useState('Thiếu nhi');
+    const [selectedCategoryName, setSelectedCategoryName] = useState('Văn học');
     const [books, setBooks] = useState([]);
     const [categories, setCategories] = useState([]);
     const [categoryNameToIdMap, setCategoryNameToIdMap] = useState({});

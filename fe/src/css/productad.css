@@ -60,3 +60,52 @@
 .button3:hover {
     background-color: #45a049;
 }
+input[type="number"] {
+    width: -webkit-fill-available;
+    width: 100%;
+    /* margin-bottom: 9px; */
+    margin-top: -6px;
+    padding: 4px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+textarea {
+    width: -webkit-fill-available;
+    width: 100%;
+    /* margin-bottom: 9px; */
+    margin-top: -6px;
+    padding: 4px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.error {
+    color: #dc3545;
+    font-size: 1rem;
+    position: relative;
+    line-height: 1;
+}
+.pagination {
+    display: inline-block;
+    margin-left: 900px;
+  }
+  
+  .pagination button {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+  }
+  
+  .pagination button.active {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .pagination button:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+  }
