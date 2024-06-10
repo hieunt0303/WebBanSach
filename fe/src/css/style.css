@@ -236,7 +236,7 @@ th {
 thead, tbody, tfoot, tr, td, th {
   border-color: inherit;
   border-style: solid;
-  border-width: 0;
+  border-width: 1px;
 }
 label {
   display: inline-block;

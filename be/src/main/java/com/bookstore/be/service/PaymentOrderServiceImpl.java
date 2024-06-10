@@ -6,6 +6,8 @@ import com.bookstore.be.repository.UserReponsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class PaymentOrderServiceImpl implements PaymentOrderService{
@@ -37,4 +39,14 @@ public class PaymentOrderServiceImpl implements PaymentOrderService{
     @Override
     public int updateOrderStatus(String orderCode, String orderStatus) {
         return paymentOrderRepository.updateOrderStatusByOrderCode(orderCode, orderStatus);}
+    @Override
+    public List<Payment_order> getAllPaymentOrders() {
+        return paymentOrderRepository.findAll();
+
+
+    }
+    @Override
+    public Payment_order getPaymentOrderById(int id) {
+        return paymentOrderRepository.findById(id).orElse(null);//lấy tt nếu ko tm thấy trả về null
+    }
 }
