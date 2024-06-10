@@ -16,7 +16,7 @@ public class AddToCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @JsonIgnore
+//    @JsonIgnore
 
 //    @OneToOne(fetch=FetchType.LAZY)
 //    @JoinColumn(name = "book_id")

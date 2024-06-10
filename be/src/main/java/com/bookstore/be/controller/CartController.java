@@ -205,7 +205,7 @@ public class CartController {
             String status = infoPayment.get("status").asText();
             if(status.equals("PAID")){
                 // cap nhap
-                paymentOrderService.updateOrderStatus(orderCode,"PAID");
+                paymentOrderService.updateOrderStatus(orderCode,"Đã thanh toán");
             }
             return ResponseEntity.ok(infoPayment);
         }catch (Exception e){
@@ -213,6 +213,7 @@ public class CartController {
             errorResponse.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
+
 
     }
 
@@ -228,9 +229,10 @@ public class CartController {
         for (int i = 0; i < cartItems.size();i++) {
             //ép lại cho đúng kiru dữ liệu mới cho phép lưu book_order
             AddToCart mapAddToCart = objectMapper.convertValue(cartItems.get(i), AddToCart.class);
+            addToCartService.removeCartByUserId(mapAddToCart.getId(), mapAddToCart.getUser_id());
             totalOrderPrice += mapAddToCart.getTotal();
             Book_order b = new Book_order();
-            b.setBook_id(mapAddToCart.getId());
+            b.setBook_id(mapAddToCart.getBook_id());
             b.setTotal(mapAddToCart.getTotal());
             b.setPrice(mapAddToCart.getPrice());
             b.setQuantity(mapAddToCart.getQty());
@@ -262,6 +264,37 @@ public class CartController {
 
 
     }
+    @GetMapping("/all_payment")
+    public ResponseEntity<?> getallPayment() {
+        try {
+            // Lấy tất cả các đơn thanh toán
+            List<Payment_order> paymentOrders = paymentOrderService.getAllPaymentOrders();
+
+            // Trả về danh sách các đơn thanh toán
+            return ResponseEntity.ok(paymentOrders);
+        } catch (Exception e) {
+            HashMap<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+
+    }
+    @GetMapping("/all_book_order")
+    public ResponseEntity<?> getallBookOrder(@RequestParam int paymentOrderId) {
+        try {
+            // Lấy tất cả các đơn sách dựa trên payment_order_id
+            List<Book_order> bookOrders = bookOrderService.getBookOrdersByPaymentOrderId(paymentOrderId);
+
+            // Trả về danh sách các đơn sách
+            return ResponseEntity.ok(bookOrders);
+        } catch (Exception e) {
+            HashMap<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+
 
 
 

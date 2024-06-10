@@ -29,7 +29,9 @@ const Checkout = ({cartItems}) =>{
         checkoutInfo:{
           ...checkoutInfo,
           orderCode: moment().unix(),
-          user_id : authData.id
+          user_id : authData.id,
+          order_status:'chưa thanh toán'
+
         },
         cartItems,
 
