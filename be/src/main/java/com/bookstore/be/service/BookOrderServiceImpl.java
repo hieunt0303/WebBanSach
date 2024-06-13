@@ -31,4 +31,9 @@ public class BookOrderServiceImpl implements BookOrderService{
         Payment_order paymentOrder = paymentOrderService.getPaymentOrderById(paymentOrderId);
         return bookOrderRepository.findByPaymentOrder(paymentOrder);
     }
+
+    @Override
+    public List<Book_order> getAllBookOrders() {
+        return bookOrderRepository.findAll();
+    }
 }

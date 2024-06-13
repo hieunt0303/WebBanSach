@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Setter
 @Getter
@@ -22,6 +24,12 @@ public class Book_order {
     private int quantity;
     private double total;
     private double price;
+
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
+    @org.hibernate.annotations.CreationTimestamp
+    private Date createdAt;
 
 
 
