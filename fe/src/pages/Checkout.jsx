@@ -207,7 +207,7 @@ const Checkout = ({cartItems}) =>{
                       <td className="py-5"></td>
                       <td className="py-5"></td>
                       <td className="py-5">
-                        <p className="mb-0 text-dark py-3">TOTAL</p>
+                        <p className="mb-0 text-dark py-3" style={{width: 90, height: 90}}>TOTAL</p>
                       </td>
                       <td className="py-5">
                         <div className="py-3 border-bottom border-top">
@@ -252,7 +252,7 @@ const Checkout = ({cartItems}) =>{
               </tbody>
             </table>
           </div>
-          <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+          {/* <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
             <div className="col-12">
               <div className="form-check text-start my-3">
                 <input type="checkbox" className="form-check-input bg-primary border-0" id="Transfer-1" name="Transfer" defaultValue="Transfer" />
@@ -260,31 +260,31 @@ const Checkout = ({cartItems}) =>{
               </div>
               <p className="text-start text-dark">Thực hiện thanh toán trực tiếp vào tài khoản ngân hàng của chúng tôi. Vui lòng sử dụng ID đơn hàng của bạn làm tài liệu tham khảo thanh toán. Đơn đặt hàng của bạn sẽ không được vận chuyển cho đến khi tiền đã được xóa trong tài khoản của chúng tôi.</p>
             </div>
-          </div>
-          <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+          </div> */}
+          {/* <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
             <div className="col-12">
               <div className="form-check text-start my-3">
                 <input type="checkbox" className="form-check-input bg-primary border-0" id="Payments-1" name="Payments" defaultValue="Payments" />
                 <label className="form-check-label" htmlFor="Payments-1">Kiểm tra thanh toán</label>
               </div>
             </div>
-          </div>
-          <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+          </div> */}
+          {/* <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
             <div className="col-12">
               <div className="form-check text-start my-3">
                 <input type="checkbox" className="form-check-input bg-primary border-0" id="Delivery-1" name="Delivery" defaultValue="Delivery" />
                 <label className="form-check-label" htmlFor="Delivery-1">Thanh toán khi giao hàng</label>
               </div>
             </div>
-          </div>
-          <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+          </div> */}
+          {/* <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
             <div className="col-12">
               <div className="form-check text-start my-3">
                 <input type="checkbox" className="form-check-input bg-primary border-0" id="Paypal-1" name="Paypal" defaultValue="Paypal" />
                 <label className="form-check-label" htmlFor="Paypal-1">Paypal</label>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row g-4 text-center align-items-center justify-content-center pt-4">
           <button
                     type="button"

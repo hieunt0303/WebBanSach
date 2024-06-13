@@ -135,11 +135,11 @@ const handleSubmit = async (e) => {
          <button type="submit">
             Đăng Ký
           </button>
-          <p >Bạn đã có tài khoản <Link to="/login" >Đăng Nhập</Link></p>
+          <p >Bạn đã có tài khoản <Link  className={registerStyles.l} to="/Login" >Đăng Nhập</Link></p>
         </form>
       </div>
     </div>
-
+   
   );
 }
 
