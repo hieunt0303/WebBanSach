@@ -31,7 +31,13 @@ const Login = () => {
 
         console.log("Đăng nhập thành công");
         // Xử lý khi đăng nhập thành công, chuyển hướng đến trang chính sau khi đăng nhập
-      window.location.reload('/');
+      // window.location.reload('/');
+      if (response.data.role === 0) {
+        window.location.replace('/homeAd');
+      } else {
+        window.location.replace('/');
+      }
+
       } else {
         setError('Email hoặc mật khẩu không chính xác');
       }
