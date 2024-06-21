@@ -9,12 +9,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @Service
 
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserReponsitory userReponsitory;
+
+
+    //pthuc ma hoa SHA
+    private String hashPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hashedBytes = md.digest(password.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashedBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
 
 
     public String register(User register) {
@@ -41,6 +56,15 @@ public class UserServiceImpl implements UserService {
 
 
 
+        try {
+            // Mã hóa mật khẩu trước khi lưu vào database
+            String hashedPassword = hashPassword(register.getPassword());
+            register.setPassword(hashedPassword);
+            register.setRepassword(hashedPassword);
+        } catch (NoSuchAlgorithmException e) {
+            return "Error occurred while hashing the password!";
+        }
+
         register.setRole(User.DEFAULT_ROLE_STATUS);
         register.setStatus(User.DEFAULT_ROLE_STATUS);
 
@@ -53,32 +77,26 @@ public class UserServiceImpl implements UserService {
 
 
 
-//    public String login(String email, String password) {
-//        // Kiểm tra xác thực người dùng
-//        User user = userReponsitory.findByEmail(email);
-//        if (user == null) {
-//            return "Email không tồn tại!";
-//        } else if (!user.getPassword().equals(password)) {
-//            return "Sai mật khẩu!";
-//        } else {
-//            return "Đăng nhập thành công!";
-//        }
-//    }
 public User login(String email, String password) {
     // Kiểm tra xác thực người dùng
     User user = userReponsitory.findByEmail(email);
     if (user == null) {
         // Email không tồn tại, ném ngoại lệ ResponseStatusException với mã trạng thái 403
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email không tồn tại");
-    } else if (!user.getPassword().equals(password)) {
-        // Sai mật khẩu, ném ngoại lệ ResponseStatusException với mã trạng thái 403
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sai mật khẩu");
-    } else {
-        // Đăng nhập thành công, trả về đối tượng User
+    } try {
+        // Mã hóa mật khẩu nhập vào để so sánh với mật khẩu đã lưu
+        String hashedPassword = hashPassword(password);
+        if (!user.getPassword().equals(hashedPassword)) {
+            // Sai mật khẩu, ném ngoại lệ ResponseStatusException với mã trạng thái 403
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sai mật khẩu");
+        }
+    } catch (NoSuchAlgorithmException e) {
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while hashing the password");
+    }
         return user;
     }
 
-}
+
 
 
 
