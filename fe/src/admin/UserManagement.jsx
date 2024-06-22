@@ -23,6 +23,36 @@ const UserManagement = () => {
               setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion")
           }
       };
+
+      const [users, setUsers] = useState([]);
+      useEffect(() => {
+        //lay  dl user
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/registerall');
+                setUsers(response.data); //Giả sử response.data là một mảng người dùng
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+
+
+    //xóa user
+    const handleDelete = async (userId) => {
+      try {
+          // Send a DELETE request to your backend API to delete the user
+          const response = await axios.delete(`http://localhost:8080/removeuser/${userId}`);
+          console.log(response.data); // Assuming you log the response for debugging
+          // After successful deletion, update the users state to reflect the change
+          setUsers(users.filter(user => user.id !== userId));
+      } catch (error) {
+          console.error('Error deleting user:', error);
+      }
+  };
   
     return (
         <>  
@@ -265,32 +295,13 @@ const UserManagement = () => {
                         </div>
                        
         <div className="product__add">
-            <div className="fromsearch-adduser">
-                <div className="fromsearch">
-                    <form className="form-inline">
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                className="form-control bg-light border-0 small"
-                                placeholder="Search for..."
-                                aria-label="Search"
-                                aria-describedby="basic-addon2"
-                                style={{ height: 'unset', width: '600px' }}
-                            />
-                            <div className="input-group-append">
-                                <button className="btn btn-primary" type="button">
-                                    <i className="fas fa-search fa-sm" />
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                
                 <div className="adduser">
                     <Link to="/addUser">
                         <button className="button button3">Thêm người dùng</button>
                     </Link>
                 </div>
-            </div>
+            
         </div>
                     
                     <table className="table table-hover" id="dev-table">
@@ -300,23 +311,33 @@ const UserManagement = () => {
                             <th>Tên </th>
                             <th>Email</th>
                             <th>Số điện thoại</th>
-                            <th>Địa chỉ</th>
                             <th>Role</th>
                             <th>Xóa</th>
                             <th>Sửa</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td></td>
-                            <td><img alt="hinhSP" style={{width: 100}} src="../images/product/${sp.img}" /></td>
-                            <td style={{maxWidth: 225}}></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><Link to="/"><button className="btn btn-warning"><i className="	fas fa-trash-alt " /></button></Link></td>
-                            <td><Link to="/editUser"><button className="btn btn-primary"><i className="fa fa-pencil" /></button></Link></td>
-                        </tr>
+                    
+                         {users.map((user, index) => (
+                            <tr key={user.id}>
+                                <td>{index + 1}</td>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
+                                <td>{user.numberphone}</td>
+                                <td>{user.role === 0 ? 'Admin' : 'User'}</td>                                <td>
+                                    <button className="btn btn-warning" onClick={() => handleDelete(user.id)}>
+                                        <i className="fas fa-trash-alt" />
+                                    </button>
+                                </td>
+                                <td>
+                                    <Link to={`/editUser/${user.id}`}>
+                                        <button className="btn btn-primary">
+                                            <i className="fa fa-pencil" />
+                                        </button>
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
             

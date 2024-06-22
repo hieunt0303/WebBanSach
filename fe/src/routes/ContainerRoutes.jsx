@@ -99,7 +99,7 @@ const ContainerRoutes = () => {
         <Route path="productManagement" element={<ProductManagement/>}/>
         <Route path="userManagement" element={<UserManagement/>}/>
         <Route path="addUser" element={<AddUser/>}/>
-        <Route path="editUser" element={<EditUser/>}/>
+        <Route path="/editUser/:userId" element={<EditUser/>}/>
         <Route path="addProduct" element={<AddP/>}/>
         <Route path="/editProduct/:id" element={<EditP/>}/>
         

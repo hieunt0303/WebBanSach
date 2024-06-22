@@ -4,6 +4,7 @@ package com.bookstore.be.controller;
 import com.bookstore.be.model.User;
 import com.bookstore.be.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,22 @@ public class UserController {
         return userService.changePassword(userId, password, repassword);
     }
 
+    @DeleteMapping("/removeuser/{userId}")
+    public String removeUser(@PathVariable int userId) {
+        return userService.removeUser(userId);
+    }
+
+    @PutMapping("/updateuser/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable int userId, @RequestBody User updatedUserData) {
+        String result = userService.updateUser(userId, updatedUserData);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/adduser")
+    public String adduser(@RequestBody User register) {
+
+        return userService.addUser(register);
+    }
 
 
 

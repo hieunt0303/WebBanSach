@@ -18,8 +18,10 @@ public class User {
     private String repassword;
     private String numberphone;
     private int role;
+
     private int status;
     public static final int DEFAULT_ROLE_STATUS = 1;
+    public static final int ROLE_ADMIN = 0;
 
     public User() {
 

@@ -23,7 +23,77 @@ const AddUser = () => {
               setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion")
           }
       };
-  
+     
+     
+      const [user, setUser] = useState({
+        name: '',
+        email: '',
+        numberphone: '',
+        password: '',
+        repassword: '',
+        role: 0
+    });
+    const [errors, setErrors] = useState({});
+    const [apiError, setApiError] = useState(null);
+
+    const navigate = useNavigate();
+    const handleChange = (e) => {
+      const value = e.target.name === 'role' ? parseInt(e.target.value, 10) : e.target.value;
+      setUser({
+          ...user,
+          [e.target.name]: value
+      });
+
+      if (errors[e.target.name]) {
+          setErrors({
+              ...errors,
+              [e.target.name]: ''
+          });
+      }
+  };
+
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      const newErrors = {};
+      if (!user.name) {
+          newErrors.name = 'Tên không bỏ trống';
+      }
+      if (!user.email) {
+          newErrors.email = 'Email không bỏ trống';
+      } else if (!/^\w+@gmail\.com$/.test(user.email)) {
+          newErrors.email = 'email phải có dạng example@gmail.com';
+      }
+      if (!user.numberphone) {
+          newErrors.numberphone = 'Số điện thoại không bỏ trống';
+      }
+      if (!user.password) {
+          newErrors.password = 'Mật khẩu không bỏ trống';
+      } else if (user.password.length < 8) {
+          newErrors.password = 'Phải 8 ký tự';
+      } else if (!/^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/.test(user.password)) {
+          newErrors.password = 'Mật khẩu phải chứa ít nhất một chữ số, một chữ cái viết hoa và một ký tự đặc biệt';
+      }
+      if (user.password !== user.repassword) {
+          newErrors.repassword = 'Mật khẩu không khớp';
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+          return;
+      }
+
+      try {
+          const response = await axios.post('http://localhost:8080/adduser', user);
+          console.log(response.data);
+          alert(response.data);
+          navigate('/userManagement');
+        } catch (error) {
+          console.error('Lỗi thêm:', error);
+
+      }
+  };
+
     return (
         <>  
     
@@ -265,33 +335,86 @@ const AddUser = () => {
                         </div>
                        <div className='adminuser'>
                     
-                        <form onSubmit="">
-                <div>
-                    <label>Tên:</label>
-                    <input type="text" name="name" value="" onChange="" required />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input type="email" name="email" required />
-                </div>
-                <div>
-                    <label>Số điện thoại:</label>
-                    <input type="text" name="phone" required />
-                </div>
-                <div>
-                    <label>Địa chỉ:</label>
-                    <input type="text" name="phone" required />
-                </div>
-                <div>
-                    <label>Role:</label>
-                    <select name="role"  required>
-                        <option value="Admin">Admin</option>
-                        <option value="User">User</option>
-                    </select>
-                </div>
-                <button type="submit">Lưu</button>
-            </form>
-            
+                 
+                       <form onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="name">Tên:</label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                                        id="name"
+                                        name="name"
+                                        value={user.name}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="email">Email:</label>
+                                    <input
+                                        type="email"
+                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                        id="email"
+                                        name="email"
+                                        value={user.email}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.email && <p className="error">{errors.email}</p>}
+                                    {apiError && <small className="text-danger">{apiError}</small>}
+
+                                    </div>
+                                <div className="form-group">
+                                    <label htmlFor="numberphone">Số điện thoại:</label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${errors.numberphone ? 'is-invalid' : ''}`}
+                                        id="numberphone"
+                                        name="numberphone"
+                                        value={user.numberphone}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.numberphone && <div className="invalid-feedback">{errors.numberphone}</div>}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="password">Mật khẩu:</label>
+                                    <input
+                                        type="password"
+                                        className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                        id="password"
+                                        name="password"
+                                        value={user.password}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="repassword">Nhắc lại mật khẩu:</label>
+                                    <input
+                                        type="password"
+                                        className={`form-control ${errors.repassword ? 'is-invalid' : ''}`}
+                                        id="repassword"
+                                        name="repassword"
+                                        value={user.repassword}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.repassword && <div className="invalid-feedback">{errors.repassword}</div>}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="role">Role:</label>
+                                    <select
+                                        className={`form-control ${errors.role ? 'is-invalid' : ''}`}
+                                        id="role"
+                                        name="role"
+                                        value={user.role}
+                                        onChange={handleChange}
+                                    >
+                                        <option value={0}>Admin</option>
+                                        <option value={1}>User</option>
+                                    </select>
+                                    {errors.role && <div className="invalid-feedback">{errors.role}</div>}
+                                </div>
+                                <button type="submit" className="btn btn-primary">lưu</button>
+                            </form>
             </div>
     
          
