@@ -243,6 +243,8 @@ public class CartController {
                 "3f0e8038-7dea-452a-9632-bd49b6b93ce8",
                 "d7d9b0ba-39df-44d6-8682-e82846d32a2e",
                 "ec1d029b0b118bd27b811ffb604d302db7c870ea18f770707c1790ef4a904c67");
+System.out.println(newPaymentOrder);
+        System.out.println(totalOrderPrice);
 
         try {
 

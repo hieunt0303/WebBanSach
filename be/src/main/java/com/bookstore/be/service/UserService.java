@@ -13,4 +13,8 @@ public interface UserService {
     List<User> getAllUserRegisters();
     String changePassword(int userId, String password, String repassword);
     public boolean isUserExists(int userId);
+    String removeUser(int userId);
+
+    String updateUser(int userId, User updatedUserData);
+    public String addUser(User register) ;
 }

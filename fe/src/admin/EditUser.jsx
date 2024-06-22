@@ -24,6 +24,94 @@ const EditUser = () => {
           }
       };
   
+    const { userId } = useParams();
+    const navigate = useNavigate();
+
+    const [userData, setUserData] = useState({
+        name: '',
+        email: '',
+        numberphone: '',
+        role: 'User'
+    });
+    const [errors, setErrors] = useState({
+      name: '',
+      email: '',
+      numberphone: ''
+  });
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/register/${userId}`);
+            const user = response.data;
+
+            const roleValue = user.role === '0' ? 'Admin' : 'User';
+
+            setUserData({
+                name: user.name,
+                email: user.email,
+                numberphone: user.numberphone,
+                role: roleValue
+            });
+        } catch (error) {
+            console.error('Lỗi khi lấy dữ liệu người dùng:', error);
+        }
+    };
+
+    fetchUserData();
+}, [userId]);
+
+const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Kiểm tra và cập nhật lỗi
+    let formValid = true;
+    const newErrors = {
+        name: '',
+        email: '',
+        numberphone: ''
+    };
+
+    if (!userData.name.trim()) {
+        newErrors.name = 'Vui lòng nhập tên';
+        formValid = false;
+    }
+
+    if (!userData.email.trim()) {
+        newErrors.email = 'Vui lòng nhập email';
+        formValid = false;
+    }
+
+    if (!userData.numberphone.trim()) {
+        newErrors.numberphone = 'Vui lòng nhập số điện thoại';
+        formValid = false;
+    }
+
+    setErrors(newErrors);
+
+    if (formValid) {
+        try {
+            const roleValue = userData.role === 'Admin' ? '0' : '1';
+            const updatedUserData = { ...userData, role: roleValue };
+
+            await axios.put(`http://localhost:8080/updateuser/${userId}`, updatedUserData);
+            alert('Cập nhật người dùng thành công!');
+            navigate('/userManagement');
+
+        } catch (error) {
+            console.error('Lỗi khi cập nhật người dùng:', error);
+        }
+    }
+};
+
+const handleChange = (event) => {
+    const { name, value } = event.target;
+    setUserData(prevUserData => ({
+        ...prevUserData,
+        [name]: value
+    }));
+};
+
+  
     return (
         <>  
     
@@ -265,33 +353,31 @@ const EditUser = () => {
                         </div>
                        <div className='adminuser'>
                     
-                        <form onSubmit="">
-                <div>
-                    <label>Tên:</label>
-                    <input type="text" name="name" value="" onChange="" required />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input type="email" name="email" required />
-                </div>
-                <div>
-                    <label>Số điện thoại:</label>
-                    <input type="text" name="phone" required />
-                </div>
-                <div>
-                    <label>Địa chỉ:</label>
-                    <input type="text" name="phone" required />
-                </div>
-                <div>
-                    <label>Role:</label>
-                    <select name="role"  required>
-                        <option value="Admin">Admin</option>
-                        <option value="User">User</option>
-                    </select>
-                </div>
-                <button type="submit">Lưu</button>
-            </form>
-            
+                       <form onSubmit={handleSubmit}>
+                                            <div className="form-group">
+                                                <label>Tên:</label>
+                                                <input type="text" name="name" className="form-control" value={userData.name} onChange={handleChange} />
+                                                {errors.name && <small className="text-danger">{errors.name}</small>}
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Email:</label>
+                                                <input type="email" name="email" className="form-control" value={userData.email} onChange={handleChange} />
+                                                {errors.email && <small className="text-danger">{errors.email}</small>}
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Số điện thoại:</label>
+                                                <input type="text" name="numberphone" className="form-control" value={userData.numberphone} onChange={handleChange} />
+                                                {errors.numberphone && <small className="text-danger">{errors.numberphone}</small>}
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Role:</label>
+                                                <select name="role" className="form-control" value={userData.role} onChange={handleChange}>
+                                                    <option value="Admin">Admin</option>
+                                                    <option value="User">User</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" className="btn btn-primary">Lưu</button>
+                                        </form>
             </div>
     
          

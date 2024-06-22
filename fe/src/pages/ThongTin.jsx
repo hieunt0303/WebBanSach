@@ -14,6 +14,14 @@ const ThongTin = () => {
 //
 
 const [userInfo, setUserInfo] = useState({});
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
 
     // Xử lý khi người dùng nhấn nút "Lưu"
     const handlePasswordChange = async (e) => {
@@ -33,13 +41,15 @@ const [userInfo, setUserInfo] = useState({});
             setMessage('Mật khẩu mới phải chứa ít nhất 8 kí tự, bao gồm ít nhất 1 chữ Hoa, 1 chữ số và 1 ký tự đặc biệt');
             return;
         }
+        const hashPass = await hashPassword(oldPassword);
+        
 
         // Kiểm tra xem mật khẩu cũ nhập vào có khớp với mật khẩu hiện tại của người dùng không
-        if (oldPassword !== storedUserData.password) {
+        if (hashPass !== storedUserData.password) {
             setMessage('Mật khẩu cũ không chính xác');
             return;
         }
-
+        
 
         //ktra mật khẩu mới có khớp với nhau
         if (newPassword !== confirmPassword) {
