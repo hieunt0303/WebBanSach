@@ -8,7 +8,7 @@ private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String NUMBER = "0123456789";
     private static final String OTHER_CHAR = "!@#$%&*()_+-=[]?";
 
-    // Tất cả các ký tự cho phép
+    // Chuỗi ký tự cho phép sử dụng trong mật khẩu
     private static final String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER + OTHER_CHAR;
     private static final SecureRandom random = new SecureRandom();
 
