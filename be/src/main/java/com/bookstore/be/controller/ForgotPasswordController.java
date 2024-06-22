@@ -4,6 +4,7 @@ import com.bookstore.be.model.PasswordGenerator;
 import com.bookstore.be.model.User;
 import com.bookstore.be.model.UserRequest;
 import com.bookstore.be.repository.UserReponsitory;
+import com.bookstore.be.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,32 +21,39 @@ public class ForgotPasswordController {
 
     @Autowired
     private UserReponsitory userRepository;
+    @Autowired
+    private UserServiceImpl userService;
 
     public ForgotPasswordController() {
     }
 
     @PostMapping("/forgotpassword")
     public String forgotPassword(@RequestBody UserRequest userRequest) {
-        String email = userRequest.getEmail();
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            return "User not found";
+        try {
+            String email = userRequest.getEmail();
+            User user = userRepository.findByEmail(email);
+
+            if (user == null) {
+                return "User not found";
+            }
+
+            // Generate new password
+            String newPassword = PasswordGenerator.generateRandomPassword(10); // Change 10 to your desired password length
+
+            // Update user's password
+            String hashedPassword = userService.hashPassword(newPassword);
+            user.setPassword(hashedPassword);
+            user.setRepassword(hashedPassword);
+            userRepository.save(user);
+
+            // Send email with new password
+            sendEmail(email, "New Password", "Mật khẩu mới của bạn là: " + newPassword);
+
+            return "Mật khẩu đã được gửi về email của bạn. Vui lòng kiểm tra email để lấy lại mật khẩu.";
+        } catch (Exception e) {
+            return "Error occurred while resetting the password";
         }
-
-        // random pass
-        String newPassword = PasswordGenerator.generateRandomPassword(10); // Change 10 to your desired password length
-
-        // cập nhật pass cho user
-        user.setPassword(newPassword);
-        user.setRepassword(newPassword);
-        userRepository.save(user);
-
-        // gửi email với pass mới
-        sendEmail(email, "New Password", "Mật khẩu mới của bạn là: " + newPassword);
-
-        return "Mật khẩu đã được gửi về mail của bạn hãy check";
     }
-
 
     private void sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();

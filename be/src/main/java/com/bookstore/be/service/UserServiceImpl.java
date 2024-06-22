@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
 
     //pthuc ma hoa SHA
-    private String hashPassword(String password) throws NoSuchAlgorithmException {
+    public String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashedBytes = md.digest(password.getBytes());
         StringBuilder sb = new StringBuilder();
