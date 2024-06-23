@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "https://webbansach-production.up.railway.app")
+@CrossOrigin(origins = "https://web-ban-sach-five.vercel.app")
 @RestController
 @RequestMapping("/payment-orders")
 

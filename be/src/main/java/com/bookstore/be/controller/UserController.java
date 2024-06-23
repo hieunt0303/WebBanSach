@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "https://webbansach-production.up.railway.app")
+@CrossOrigin(origins = "https://web-ban-sach-five.vercel.app")
 @RestController
 public class UserController {
 

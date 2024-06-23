@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-@CrossOrigin(origins = "https://webbansach-production.up.railway.app")
+@CrossOrigin(origins = "https://web-ban-sach-five.vercel.app")
 @RestController
 @RequestMapping("/book")
 @Validated

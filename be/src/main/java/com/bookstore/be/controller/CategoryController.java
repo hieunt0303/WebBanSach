@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@CrossOrigin(origins = "https://webbansach-production.up.railway.app")
+@CrossOrigin(origins = "https://web-ban-sach-five.vercel.app")
 @RestController
 @RequestMapping("/category")
 
