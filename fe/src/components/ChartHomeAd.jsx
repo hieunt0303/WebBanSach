@@ -39,7 +39,7 @@ const ChartHomeAd = () => {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:8080/book-orders/get_all')
+    axios.get('https://webbansach-production.up.railway.app/book-orders/get_all')
       .then(response => {
         console.log('API response:', response.data); // Debug log
         const orders = response.data;

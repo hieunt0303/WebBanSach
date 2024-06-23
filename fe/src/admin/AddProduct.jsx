@@ -60,7 +60,7 @@ const AddP = () => {
             category: { id: Number(formData.category) }
           };
       
-          await axios.post('http://localhost:8080/book/addBook', [bookData]);
+          await axios.post('https://webbansach-production.up.railway.app/book/addBook', [bookData]);
           alert('Sách đã được thêm thành công!');
           navigate('/productManagement');
           setErrors({

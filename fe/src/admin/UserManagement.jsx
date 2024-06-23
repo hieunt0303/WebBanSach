@@ -29,7 +29,7 @@ const UserManagement = () => {
         //lay  dl user
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/registerall');
+                const response = await axios.get('https://webbansach-production.up.railway.app/registerall');
                 setUsers(response.data); //Giả sử response.data là một mảng người dùng
             } catch (error) {
                 console.error('Error fetching users:', error);
@@ -45,7 +45,7 @@ const UserManagement = () => {
     const handleDelete = async (userId) => {
       try {
           // Send a DELETE request to your backend API to delete the user
-          const response = await axios.delete(`http://localhost:8080/removeuser/${userId}`);
+          const response = await axios.delete(`https://webbansach-production.up.railway.app/removeuser/${userId}`);
           console.log(response.data); // Assuming you log the response for debugging
           // After successful deletion, update the users state to reflect the change
           setUsers(users.filter(user => user.id !== userId));

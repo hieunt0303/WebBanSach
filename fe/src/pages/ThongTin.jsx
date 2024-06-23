@@ -58,7 +58,7 @@ async function hashPassword(password) {
         }
         // Nếu mật khẩu cũ đúng, tiếp tục quá trình đổi mật khẩu
         try {
-            const response = await axios.put(`http://localhost:8080/change-password/${storedUserData.id}`, {
+            const response = await axios.put(`https://webbansach-production.up.railway.app/change-password/${storedUserData.id}`, {
                 oldPassword,
                 newPassword,
                 confirmPassword,

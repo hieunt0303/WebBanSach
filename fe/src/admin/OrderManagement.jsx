@@ -12,7 +12,7 @@ const OrderManagement = () => {
 
   useEffect(() => {
     //gọi api để lấy tt tất cả đơn hàng
-    axios.get('http://localhost:8080/cart/all_payment')
+    axios.get('https://webbansach-production.up.railway.app/cart/all_payment')
       .then(response => {
 
         setOrders(response.data); //cập nhập state với dữ liệu đơn hàng từ api
@@ -22,7 +22,7 @@ const OrderManagement = () => {
       });
   }, []);
   const handleViewOrder = (orderId) => {
-    axios.get(`http://localhost:8080/cart/all_book_order?paymentOrderId=${orderId}`)
+    axios.get(`https://webbansach-production.up.railway.app/cart/all_book_order?paymentOrderId=${orderId}`)
       .then(response => {
         setBookOrder(response.data);
         setShowDialog(true)

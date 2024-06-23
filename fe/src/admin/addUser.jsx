@@ -84,7 +84,7 @@ const AddUser = () => {
       }
 
       try {
-          const response = await axios.post('http://localhost:8080/adduser', user);
+          const response = await axios.post('https://webbansach-production.up.railway.app/adduser', user);
           console.log(response.data);
           alert(response.data);
           navigate('/userManagement');

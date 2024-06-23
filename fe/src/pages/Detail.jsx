@@ -11,7 +11,7 @@ const Detail = ({ match,authData, updateCartItems }) => {
     useEffect(() => {
       const fetchBookDetail = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/book/getBookById/${id}`);
+          const response = await axios.get(`https://webbansach-production.up.railway.app/book/getBookById/${id}`);
           setBook(response.data);
           setError(null);
         } catch (error) {
@@ -37,7 +37,7 @@ const Detail = ({ match,authData, updateCartItems }) => {
     
         const price = book.price;
     
-        const response = await axios.post('http://localhost:8080/cart/addBookToCart', {
+        const response = await axios.post('https://webbansach-production.up.railway.app/cart/addBookToCart', {
           bookId: bookId,
           userId: userId,
           price: price, // Giá sản phẩm (thay đổi theo sản phẩm)

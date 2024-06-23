@@ -9,7 +9,7 @@ const ProductManagement = () => {
  const [books, setBooks] = useState([]);
 
  useEffect(() => {
-   axios.get('http://localhost:8080/book/getAllBook')
+   axios.get('https://webbansach-production.up.railway.app/book/getAllBook')
      .then(response => {
        setBooks(response.data);
      })
@@ -19,7 +19,7 @@ const ProductManagement = () => {
  }, []);
  //xóa
  const deleteBook = (id) => {
-   axios.delete(`http://localhost:8080/book/delete/${id}`)
+   axios.delete(`https://webbansach-production.up.railway.app/book/delete/${id}`)
      .then(response => {
        //        Làm mới danh sách sách sau khi xóa
        setBooks(books.filter(book => book.id !== id));
@@ -57,7 +57,7 @@ const [keyword, setKeyword] = useState("");
 useEffect(() => {
   const fetchBooks = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/book/search`, {
+      const response = await axios.get(`https://webbansach-production.up.railway.app/book/search`, {
         params: { keyword }
       });
       setBooks(response.data);

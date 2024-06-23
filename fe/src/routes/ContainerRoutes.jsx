@@ -58,7 +58,7 @@ const ContainerRoutes = () => {
           return;
         }
   
-        const response = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
+        const response = await axios.get(`https://webbansach-production.up.railway.app/cart/getCartsByUserId`, {
           params: { userId: userId }
         });
         updateCartItems(response.data);

@@ -41,7 +41,7 @@ const handleSubmit = async (e) => {
     }
 
     try {
-        const response = await axios.post('http://localhost:8080/register', formData);
+        const response = await axios.post('https://webbansach-production.up.railway.app/register', formData);
         console.log(response.data);
         setError('Đăng ký thành công');
         //luu tt user

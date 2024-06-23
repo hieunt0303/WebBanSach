@@ -21,7 +21,7 @@ const Product = () => {
         // Gọi API để lấy danh sách categories khi component được render
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/category/getAllCate');
+                const response = await axios.get('https://webbansach-production.up.railway.app/category/getAllCate');
                 const categoriesData = response.data;
                 setCategories(categoriesData);
 
@@ -44,7 +44,7 @@ const Product = () => {
         const fetchBooksByCategory = async () => {
             try {
                 const categoryId = categoryNameToIdMap[selectedCategoryName];
-                const response = await axios.get(`http://localhost:8080/book/getProductsByCategory/${categoryId}`);
+                const response = await axios.get(`https://webbansach-production.up.railway.app/book/getProductsByCategory/${categoryId}`);
                 setBooks(response.data);
             } catch (error) {
                 console.error('Error fetching books: ', error);
@@ -68,7 +68,7 @@ const Product = () => {
         // Gửi yêu cầu tìm kiếm qua AJAX nếu có từ khóa
         if (keyword.trim() !== '') {
             try {
-                const response = await axios.get(`http://localhost:8080/book/search?keyword=${keyword}`);
+                const response = await axios.get(`https://webbansach-production.up.railway.app/book/search?keyword=${keyword}`);
                 setSuggestedKeywords(response.data); // Cập nhật danh sách từ khóa gợi ý
                 setBooks(response.data);//cập nhật danh sách với kết quả từ be
             } catch (error) {
@@ -78,7 +78,7 @@ const Product = () => {
             // Nếu từ khóa tìm kiếm trống, hiển thị lại sản phẩm theo danh mục được chọn
             const categoryId = categoryNameToIdMap[selectedCategoryName];
             try {
-                const response = await axios.get(`http://localhost:8080/book/getProductsByCategory/${categoryId}`);
+                const response = await axios.get(`https://webbansach-production.up.railway.app/book/getProductsByCategory/${categoryId}`);
 
                 setBooks(response.data);//cập nhật danh sách 
                 setSuggestedKeywords([]); 
@@ -114,7 +114,7 @@ const handleAddToCart = async (bookId) => {
         const price = books.find(book => book.id === bookId)?.price;
         const qty = 1; // Số lượng mặc định
 
-        const response = await axios.post('http://localhost:8080/cart/addBookToCart', {
+        const response = await axios.post('https://webbansach-production.up.railway.app/cart/addBookToCart', {
             bookId: bookId,
             userId: userId,
             price: price, // Giá sản phẩm (thay đổi theo sản phẩm)

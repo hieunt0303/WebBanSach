@@ -25,7 +25,7 @@ useEffect(() => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
+      const response = await axios.get(`https://webbansach-production.up.railway.app/cart/getCartsByUserId`, {
         params: { userId: userId }
       });
       updateCartItems(response.data);
@@ -64,12 +64,12 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
       }
     }
 
-    const response = await axios.put(`http://localhost:8080/cart/updateQtyForCart`, {
+    const response = await axios.put(`https://webbansach-production.up.railway.app/cart/updateQtyForCart`, {
       cartId: cartItemId,
       qty: newQuantity
     });
 
-    const updatedCartItemsResponse = await axios.get(`http://localhost:8080/cart/getCartsByUserId`, {
+    const updatedCartItemsResponse = await axios.get(`https://webbansach-production.up.railway.app/cart/getCartsByUserId`, {
       params: { userId: authData?.id }
     });
 
@@ -82,7 +82,7 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
 /// xóa san phẩm trong cart
 const handleRemoveItem = async (cartItemId) => {
   try {
-    const response = await axios.delete(`http://localhost:8080/cart/removeBookFromCart`, {
+    const response = await axios.delete(`https://webbansach-production.up.railway.app/cart/removeBookFromCart`, {
       data: { userId: authData?.id, cartId: cartItemId } // Gửi userId và cartId để xóa sản phẩm
     });
 

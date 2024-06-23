@@ -5,7 +5,7 @@ const PopUpBookOrder = ({ bookOrder, setShowDialog }) => {
   const [books, setBooks] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios("http://localhost:8080/book/getAllBook");
+      const response = await axios("https://webbansach-production.up.railway.app/book/getAllBook");
       console.log(response.data);
       setBooks(response.data);
     };

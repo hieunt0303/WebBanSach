@@ -25,7 +25,7 @@ const Checkout = ({cartItems}) =>{
   const handlePaymentOrder = async() => {
    
     try{
-      const checkout = await axios.post('http://localhost:8080/cart/checkout', {
+      const checkout = await axios.post('https://webbansach-production.up.railway.app/cart/checkout', {
         checkoutInfo:{
           ...checkoutInfo,
           orderCode: moment().unix(),

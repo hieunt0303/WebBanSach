@@ -33,7 +33,7 @@ const EditP = () => {
   
     useEffect(() => {
       //lấy book theo id
-      axios.get(`http://localhost:8080/book/getBookById/${id}`)
+      axios.get(`https://webbansach-production.up.railway.app/book/getBookById/${id}`)
           .then(response => {
               console.log('Product data:', response.data);
               setProduct(response.data);
@@ -43,7 +43,7 @@ const EditP = () => {
           });
   
       //lay tat cả cate
-      axios.get('http://localhost:8080/category/getAllCate')
+      axios.get('https://webbansach-production.up.railway.app/category/getAllCate')
           .then(response => {
               console.log('Categories data:', response.data);
               setCategories(response.data);
@@ -59,7 +59,7 @@ const EditP = () => {
           ...product,
           category: { id: parseInt(product.category.id, 10) } //id cate là 1 so nguyen
       };
-      axios.put(`http://localhost:8080/book/updateBook/${id}`, updatedProduct)
+      axios.put(`https://webbansach-production.up.railway.app/book/updateBook/${id}`, updatedProduct)
           .then(response => {
               console.log('Product updated successfully:', response.data);
               navigate('/productManagement');

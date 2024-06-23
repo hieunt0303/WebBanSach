@@ -22,7 +22,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8080/login', formData);
+      const response = await axios.post('https://webbansach-production.up.railway.app/login', formData);
       console.log(response.data.id)
 
       if (response.data.id) {

@@ -15,7 +15,7 @@ const Thankyou = () => {
         if(!id || !orderCode || !status || status !== "PAID") return;
         const fetchData = async () => {
             try{
-                await axios.post("http://localhost:8080/cart/check-payment",{
+                await axios.post("https://webbansach-production.up.railway.app/cart/check-payment",{
                     orderCode
                 });
 

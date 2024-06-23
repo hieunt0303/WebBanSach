@@ -14,7 +14,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/forgotpassword", { email });
+      const response = await axios.post("https://webbansach-production.up.railway.app/forgotpassword", { email });
       setMessage(response.data);
       setShowPassword(true);
     } catch (error) {

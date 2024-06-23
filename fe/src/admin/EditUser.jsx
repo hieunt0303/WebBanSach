@@ -41,7 +41,7 @@ const EditUser = () => {
   useEffect(() => {
     const fetchUserData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/register/${userId}`);
+            const response = await axios.get(`https://webbansach-production.up.railway.app/register/${userId}`);
             const user = response.data;
 
             const roleValue = user.role === '0' ? 'Admin' : 'User';
@@ -93,7 +93,7 @@ const handleSubmit = async (event) => {
             const roleValue = userData.role === 'Admin' ? '0' : '1';
             const updatedUserData = { ...userData, role: roleValue };
 
-            await axios.put(`http://localhost:8080/updateuser/${userId}`, updatedUserData);
+            await axios.put(`https://webbansach-production.up.railway.app/updateuser/${userId}`, updatedUserData);
             alert('Cập nhật người dùng thành công!');
             navigate('/userManagement');
 
