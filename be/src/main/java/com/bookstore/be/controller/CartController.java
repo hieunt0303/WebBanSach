@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://webbansach-production.up.railway.app")
 @RestController
 @RequestMapping("/cart")
 public class CartController {

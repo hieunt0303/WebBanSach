@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://webbansach-production.up.railway.app")
 @RestController
 @RequestMapping("/book-orders")
 public class BookOrderController {
